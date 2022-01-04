@@ -1,12 +1,42 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require("sequelize");
 // Exportamos una funcion que define el modelo
 // Luego le injectamos la conexion a sequelize.
 module.exports = (sequelize) => {
   // defino el modelo
-  sequelize.define('recipe', {
+  sequelize.define("Recipe", {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      allowNull: false,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    resume: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    score: {
+      type: DataTypes.INTEGER,
+    },
+    healtScore: {
+      type: DataTypes.INTEGER,
+    },
+    steps: {
+      type: DataTypes.JSON,
+    },
+    img: {
+      type: DataTypes.STRING,
+      defaultValue: "C:/Users/Nico_/Documents/Repo/pi/PI-Food-main/cooking.png",
+    },
+    createdInDb: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
   });
 };
+
+//RE-VER: hay un datatype para recibir arrays y aclarar lo que viene adentro, ver en el grupo o reguntar
