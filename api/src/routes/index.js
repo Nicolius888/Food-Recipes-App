@@ -50,7 +50,7 @@ const getDiets = async () => {
     };
   });
   //this is where we will push each type of diet only if it doesn's includes it //acá vamos a "pushear" cada tipo de dieta unicamente si todavia no esta en el array
-  const allTypes = [];
+  const allTypes = ["vegetarian"]; //vegetarian isnt included in the api, we included it manually, so the user can create using it.
 
   dietsFiltered.forEach((e) => {
     //for heach "little" object in the "big" one  // por cada "objeto pequeño" en el "objeto grande"
