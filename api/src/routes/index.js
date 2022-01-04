@@ -131,14 +131,13 @@ router.get("/recipes", async (req, res) => {
 
 router.get("/recipes/:id", async (req, res) => {
   const { id } = req.params;
-  //same search logic, but with findOne //misma logica de busqueda anterior ,pero con findOne
-  const recipe = await Recipe.findOne({
-    where: { id },
-  });
-  if (recipe) {
-    res.status(200).send(recipe);
-  } else {
-    res.status(404).send("Recipe not found, try again (◡‿◡*)");
+  const recipes = await getRecipes();
+  //here we just filter api recipes + DB created recipes by id //aqui solo filtramos las recetas de la api + las creadas en la DB por id
+  if (id) {
+    let recipeId = await recipes.filter((recipe) => recipe.id == id);
+    recipeId.length
+      ? res.status(200).json(recipeId)
+      : res.status(400).send("id not found (◡‿◡*)");
   }
 });
 
@@ -178,5 +177,3 @@ router.post("/recipes", async (req, res) => {
 });
 
 module.exports = router;
-
-//the "search by id" steel only searches by UUID type of id...
