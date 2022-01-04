@@ -152,7 +152,7 @@ router.post("/recipes", async (req, res) => {
     req.body; //diets is an array with string of types of diets //diets es un array con strings de tipos de dietas
 
   const create = await Recipe.create({
-    //we create the recipe in the DB  //creamos la receta en la DB
+    //create the recipe in the DB  //creamos la receta en la DB
     name,
     resume,
     score,
@@ -178,3 +178,5 @@ router.post("/recipes", async (req, res) => {
 });
 
 module.exports = router;
+
+//the "search by id" steel only searches by UUID type of id...
