@@ -1,0 +1,41 @@
+.card {
+  display: grid;
+  width: 180px;
+  height: 200px;
+  margin: 0.5%;
+  background-color: #ffffffa8;
+  border-radius: 10px;
+  box-shadow: 0 2px 2px rgb(0 0 0 / 20%);
+  cursor: pointer;
+  text-align: center;
+  -webkit-transition-duration: 200ms;
+  transition-duration: 200ms;
+  align-items: center;
+  justify-content: center;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.name {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #000000;
+  margin-bottom: 0%;
+  margin-top: 0%;
+  padding-bottom: 0%;
+  border-bottom: 0%;
+}
+
+.img {
+  width: 175px;
+  height: 115px;
+  align-self: center;
+  justify-self: center;
+  border-radius: 10px;
+}
+.diet {
+  font-size: 0.8rem;
+  padding-top: 0px;
+  margin-top: 0px;
+}

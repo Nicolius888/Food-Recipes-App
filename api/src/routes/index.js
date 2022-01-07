@@ -1,8 +1,8 @@
 const { Router } = require("express");
 const axios = require("axios");
 const cors = require("cors");
-require("dotenv").config(); // this works with dotenv package: npm i dotenv, //esto funciona con el paquete dotenv: npm i dotenv,
-const API_KEY = process.env.API_KEY; // and, the .env file, indeed.
+require("dotenv").config(); // dotenv package
+const { API_KEY } = process.env; // and, the .env file
 const { Recipe, Diet } = require("../db");
 
 // Importar todos los routers;
@@ -12,12 +12,13 @@ const router = Router();
 
 router.use(
   cors({
-    origin: "http://localhost:3001",
+    origin: "http://localhost:3000",
   })
 );
 
 //FUNCTIONS/GETS/FILTERS TO USE IN ROUTES:
 //get api recipes //get recetas de la api
+
 const getApiRecipes = async () => {
   const recipesGet = await axios.get(
     `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
@@ -29,7 +30,9 @@ const getApiRecipes = async () => {
       resume: recipe.summary,
       score: Math.round(recipe.spoonacularScore),
       healtScore: Math.round(recipe.healthScore),
-      steps: recipe.analyzedInstructions,
+      steps: recipe.analyzedInstructions.map((e) =>
+        e.steps.map((el) => el.step)
+      ),
       img: recipe.image,
       diet: recipe.diets,
     };
@@ -49,8 +52,9 @@ const getDiets = async () => {
       type: types.diets.map((e) => e),
     };
   });
+
   //this is where we will push each type of diet only if it doesn's includes it //acá vamos a "pushear" cada tipo de dieta unicamente si todavia no esta en el array
-  const allTypes = ["vegetarian", "ketogenic"]; //vegetarian isnt included in the api, we included it manually, so the user can create using it.
+  const allTypes = ["vegetarian", "ketogenic"]; //this two arent included in the api, we included it manually, so the user can create using it.
 
   dietsFiltered.forEach((e) => {
     //for heach "little" object in the "big" one  // por cada "objeto pequeño" en el "objeto grande"

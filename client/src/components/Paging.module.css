@@ -1,0 +1,36 @@
+.pagingList {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+.pagingButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  color: #145288b4;
+  border-color: #2195f393;
+  background: transparent;
+  border-radius: 1px;
+  border-width: 1px;
+  border-style: solid;
+  border-width: 0.5px;
+  font-family: "Ubuntu", sans-serif;
+  transition: 0.25s ease;
+  cursor: pointer;
+  margin: 2px;
+}
+.pagingButton:hover {
+  background: #2196f3;
+  color: #fff;
+  border-radius: 30px;
+  text-shadow: 1px 1px 2px #427388;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+.liTag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}

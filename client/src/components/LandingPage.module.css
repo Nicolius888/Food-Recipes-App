@@ -1,10 +1,10 @@
 .button {
-  background: #a6d9f7;
-  background-image: -webkit-linear-gradient(top, #a6d9f7, #bccce0);
-  background-image: -moz-linear-gradient(top, #a6d9f7, #bccce0);
-  background-image: -ms-linear-gradient(top, #a6d9f7, #bccce0);
-  background-image: -o-linear-gradient(top, #a6d9f7, #bccce0);
-  background-image: linear-gradient(to bottom, #a6d9f7, #bccce0);
+  background: #a6f7d5;
+  background-image: -webkit-linear-gradient(top, #a6f7d5, #e0cabc);
+  background-image: -moz-linear-gradient(top, #a6f7d5, #e0cabc);
+  background-image: -ms-linear-gradient(top, #a6f7d5, #e0cabc);
+  background-image: -o-linear-gradient(top, #a6f7d5, #e0cabc);
+  background-image: linear-gradient(to bottom, #a6f7d5, #e0cabc);
   -webkit-border-radius: 14;
   -moz-border-radius: 14;
   border-radius: 14px;
@@ -13,7 +13,7 @@
   -webkit-box-shadow: -3px 2px 3px #666666;
   -moz-box-shadow: -3px 2px 3px #666666;
   font-family: Courier New;
-  box-shadow: -3px 2px 3px #c7bbc7;
+  box-shadow: -3px 2px 3px #c7bbbb;
   color: #ffffff;
   font-size: 31px;
   padding: 10px 20px 10px 20px;
@@ -26,21 +26,34 @@
 }
 
 .button:hover {
-  background: #bccce0;
-  background-image: -webkit-linear-gradient(top, #bccce0, #a6d9f7);
-  background-image: -moz-linear-gradient(top, #bccce0, #a6d9f7);
-  background-image: -ms-linear-gradient(top, #bccce0, #a6d9f7);
-  background-image: -o-linear-gradient(top, #bccce0, #a6d9f7);
-  background-image: linear-gradient(to bottom, #bccce0, #a6d9f7);
+  background: #e0bcbc;
+  background-image: -webkit-linear-gradient(top, #e0cabc, #a6f7d5);
+  background-image: -moz-linear-gradient(top, #e0cabc, #a6f7d5);
+  background-image: -ms-linear-gradient(top, #e0cabc, #a6f7d5);
+  background-image: -o-linear-gradient(top, #e0cabc, #a6f7d5);
+  background-image: linear-gradient(to bottom, #e0cabc, #a6f7d5);
   text-decoration: none;
 }
 
-.h1.h3 {
+.h1 {
   font-family: "Trebuchet MS", Helvetica, sans-serif;
-  font-size: 29px.5px;
+  font-size: 29px;
   letter-spacing: -0.6px;
   word-spacing: 5.2px;
-  color: #312f2f;
+  color: #35302d;
+  font-weight: 700;
+  text-decoration: none solid rgb(68, 68, 68);
+  font-style: italic;
+  font-variant: small-caps;
+  margin-top: 9%;
+}
+
+.h2 {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  /* font-size: 29px; */
+  letter-spacing: -0.6px;
+  word-spacing: 5.2px;
+  color: #35302d;
   font-weight: 700;
   text-decoration: none solid rgb(68, 68, 68);
   font-style: italic;

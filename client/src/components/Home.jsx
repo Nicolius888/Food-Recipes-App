@@ -1,8 +1,12 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-hooks";
+import { useDispatch, useSelector } from "react-redux";
 import { getRecipes } from "../actions";
 import { Link } from "react-router-dom";
+import styles from "./Home.module.css";
+import Card from "./Card";
+import Paging from "./Paging";
+
 export default function Home() {
   const dispatch = useDispatch();
   const recipesState = useSelector((state) => state.recipes);
@@ -10,15 +14,30 @@ export default function Home() {
   useEffect(() => {
     dispatch(getRecipes());
   }, [dispatch]); //ver que funcione con el dispatch  como dependencia, no deberia fallar peeero...
-
-  function handleClick(e) {
+  //reload recipes
+  async function handleReload(e) {
     e.preventDefault();
-    dispatch(getRecipes());
+    await dispatch(getRecipes());
+    setCurrentPage(1);
   }
+
+  //paging
+  const [currentPage, setCurrentPage] = useState(1);
+  const recipesPerPage = 9;
+  const indexOfLastRecipe = currentPage * recipesPerPage;
+  const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
+  const currentRecipes = recipesState.slice(
+    indexOfFirstRecipe,
+    indexOfLastRecipe
+  );
+
+  const paging = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div>
-      <h1>Search Recipes!</h1>
+      <h1 className={styles.title}>Search Recipes!</h1>
       <div>
         <select>
           {/*select: add tag order to controll de option selected with a local state */}
@@ -38,9 +57,34 @@ export default function Home() {
           <option value="whole30">Whole 30</option>
         </select>
       </div>
+
       <Link to="/create">
-        <button onClick={(e) => handleClick(e)}>Add a new recipe</button>
+        <button>Add a new recipe</button>
       </Link>
+
+      <button onClick={(e) => handleReload(e)}>Reload recipes</button>
+
+      <div className={styles.cards}>
+        {currentRecipes.length ? (
+          currentRecipes.map((recipe) => {
+            return (
+              <Card
+                key={recipe.id}
+                name={recipe.name}
+                image={recipe.img}
+                diets={recipe.diet}
+              />
+            );
+          })
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
+      <Paging
+        recipesPerPage={recipesPerPage}
+        recipesState={recipesState.length}
+        paging={paging}
+      />
     </div>
   );
 }

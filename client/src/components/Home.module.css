@@ -1,0 +1,23 @@
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 2rem;
+}
+.search {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 30px;
+}
+.title {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-size: 29px;
+  letter-spacing: -0.6px;
+  word-spacing: 5.2px;
+  color: #312f2f;
+  font-weight: 700;
+  text-decoration: none solid rgb(68, 68, 68);
+  font-style: italic;
+  font-variant: small-caps;
+}
