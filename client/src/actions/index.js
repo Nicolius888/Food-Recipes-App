@@ -13,3 +13,25 @@ export function getRecipes() {
     }
   };
 }
+export function deleteRecipes() {
+  return {
+    type: "DELETE_RECIPES",
+  };
+}
+export function filterByDiets(payload) {
+  return {
+    type: "FILTER_BY_DIETS",
+    payload,
+  };
+}
+export function filterByScore(payload) {
+  return {
+    type: "FILTER_BY_SCORE",
+    payload,
+  };
+}
+export function invertOrder() {
+  return {
+    type: "INVERT_ORDER",
+  };
+}

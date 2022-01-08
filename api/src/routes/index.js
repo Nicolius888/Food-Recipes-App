@@ -17,7 +17,7 @@ router.use(
 );
 
 //FUNCTIONS/GETS/FILTERS TO USE IN ROUTES:
-//get api recipes //get recetas de la api
+//get api recipes
 
 const getApiRecipes = async () => {
   const recipesGet = await axios.get(
@@ -40,46 +40,45 @@ const getApiRecipes = async () => {
   return recipesFiltered;
 };
 
-//only api diets // solo dietas de la api
+//only api diets
 const getDiets = async () => {
-  //all api data //toda la data de la api
+  //all api data
   const dietsGet = await axios.get(
     `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
   );
-  //this returns a "big" object with "little" objects each one with the array of diets of each recipe //esto devuelve un "objeto grande" con "objetos pequeños" cada uno con el array de dietas de cada receta
+  //this returns a "big" object with "little" objects each one with the array of diets of each recipe
   const dietsFiltered = await dietsGet.data.results.map((types) => {
     return {
       type: types.diets.map((e) => e),
     };
   });
 
-  //this is where we will push each type of diet only if it doesn's includes it //acá vamos a "pushear" cada tipo de dieta unicamente si todavia no esta en el array
+  //this is where we will push each type of diet only if it doesn's includes it
   const allTypes = ["vegetarian", "ketogenic"]; //this two arent included in the api, we included it manually, so the user can create using it.
 
   dietsFiltered.forEach((e) => {
-    //for heach "little" object in the "big" one  // por cada "objeto pequeño" en el "objeto grande"
+    //for heach "little" object in the "big" one
     e.type.forEach((e) => {
-      // and for each type of diet in the "little" object // y por cada tipo de dieta en el "objeto pequeño"
+      // and for each type of diet in the "little" object
       if (!allTypes.includes(e)) {
-        //if it not exists in my allTypes array //si no existe en mi array allTypes
-        allTypes.push(e); //push it. //pushealo
+        //if it not exists in my allTypes array
+        allTypes.push(e); //push it.
       }
-      //and voilá we have all the diets, not repeated.  // y voilá tenemos todas las dietas, sin repetir.
+      //and voilá we have all the diets, not repeated.
     });
   });
-  //this create the diets in the DB //aca creamos las dietas en la DB
+  //this create the diets in the DB
   const create = async () => {
     allTypes.forEach((name) => {
-      Diet.findOrCreate({ where: { name: name } }); //this has to be findOrCreate to do the create just ONCE.// esto tiene que ser findOrCreate para hacer el create solo UNA VEZ.
+      Diet.findOrCreate({ where: { name: name } }); //this has to be findOrCreate to do the create just ONCE.
     });
     return allTypes;
   };
-  //all this is to be used in /types route //todo esto es para usar el la ruta /types
-  //lo que cambiaría seria que el get a la api se haga aparte del get types, xq la api da reqests limitados...
+  //all this is to be used in /types route
   return create();
 };
 
-//this find created in DB recipes //acá buscamos las recetas creadas en la DB
+//this find created in DB recipes
 const findFoods = async () => {
   let total = await Recipe.findAll({
     include: {
@@ -94,7 +93,7 @@ const findFoods = async () => {
   return total;
 };
 
-//api recipes + DB created. //concatenamos las recetas de la api con las creadas en la DB
+//api recipes + DB created.
 const getRecipes = async () => {
   const apiRecipes = await getApiRecipes();
   const dbFoods = await findFoods();
@@ -106,7 +105,7 @@ const getRecipes = async () => {
 router.get("/recipes", async (req, res) => {
   const recipes = await getRecipes();
   const { name } = req.query;
-  //recipes alphabetically sort by name //ordenamos las recetas por nombre alfabeticamente (metodo sort!)
+  //recipes alphabetically sort by name
   const recipesSort = await recipes.sort(function (a, b) {
     var nameA = a.name.toUpperCase();
     var nameB = b.name.toUpperCase();
@@ -118,7 +117,7 @@ router.get("/recipes", async (req, res) => {
     }
     return 0;
   });
-  //if there is a name query, filter and send only that one. //si hay un query de nombre, filtramos y mandamos solo esa.
+  //if there is a name query, filter and send only that one.
   if (name) {
     const nameSearch = await recipes.filter((recipe) =>
       recipe.name.toLowerCase().includes(name.toLowerCase())
@@ -136,7 +135,7 @@ router.get("/recipes", async (req, res) => {
 router.get("/recipes/:id", async (req, res) => {
   const { id } = req.params;
   const recipes = await getRecipes();
-  //here we just filter api recipes + DB created recipes by id //aqui solo filtramos las recetas de la api + las creadas en la DB por id
+  //here we just filter api recipes + DB created recipes by id
   if (id) {
     let recipeId = await recipes.filter((recipe) => recipe.id == id);
     recipeId.length
@@ -146,16 +145,16 @@ router.get("/recipes/:id", async (req, res) => {
 });
 
 router.get("/types", async (req, res) => {
-  const diets = await getDiets(); //remember that we do the logic up there // recordemos que hicimos la logica arriba
+  const diets = await getDiets(); //remember that we do the logic up there
   res.status(200).json(diets);
 });
 
 router.post("/recipes", async (req, res) => {
   const { name, resume, score, healtScore, steps, img, createdInDb, diets } =
-    req.body; //diets is an array with string of types of diets //diets es un array con strings de tipos de dietas
+    req.body; //diets is an array with string of types of diets
 
   const create = await Recipe.create({
-    //create the recipe in the DB  //creamos la receta en la DB
+    //create the recipe in the DB
     name,
     resume,
     score,
@@ -166,18 +165,18 @@ router.post("/recipes", async (req, res) => {
   });
 
   let dietIds = diets.map(
-    async (dietName) => await Diet.findOne({ where: { name: dietName } }) //find diets by name, one by one, with map //buscamos dietas por nombre, una por una, con map
+    async (dietName) => await Diet.findOne({ where: { name: dietName } }) //find diets by name, one by one, with map
   );
 
-  dietIds = await Promise.all(dietIds); //resolve it //resolvemos con promise.all
+  dietIds = await Promise.all(dietIds); //resolve it
 
-  dietIds = dietIds.map((diet) => diet.id); //filter the diets by id  //filtramos las dietas por id
+  dietIds = dietIds.map((diet) => diet.id); //filter the diets by id
 
   dietIds.map(async (id) => {
-    //set the relationship by id, and add it to the recipe creator //seteamos la relacion por id, y la agregamos al creator de la receta
+    //set the relationship by id, and add it to the recipe creator
     await create.addDiet(id);
   });
-  res.status(201).json(create); //return the "201 created", and the recipe created. //retornamos el "201 created", y la receta creada.
+  res.status(201).json(create); //return the "201 created", and the recipe created.
 });
 
 module.exports = router;
