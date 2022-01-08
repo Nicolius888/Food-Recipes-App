@@ -30,8 +30,24 @@ export function filterByScore(payload) {
     payload,
   };
 }
-export function invertOrder() {
+export function invertOrder(payload) {
   return {
     type: "INVERT_ORDER",
+    payload,
+  };
+}
+export function searchByName(payload) {
+  return async function (dispatch) {
+    try {
+      const json = await axios.get(
+        `http://localhost:3001/recipes?name=${payload}`
+      );
+      return dispatch({
+        type: "SEARCH_BY_NAME",
+        payload: json.data,
+      });
+    } catch (error) {
+      console.log("Error searchin by name", error);
+    }
   };
 }

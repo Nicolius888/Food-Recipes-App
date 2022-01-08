@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import styles from "./Home.module.css";
 import Card from "./Card";
 import Paging from "./Paging";
+import SearchBar from "./SearchBar";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -41,22 +42,33 @@ export default function Home() {
     e.preventDefault();
     //for "loading..."
     dispatch(deleteRecipes());
-    //our function
-    await dispatch(getRecipes());
     //resets...
     setCurrentPage(1);
     setDietSelectLabel("all");
     setScoreSelectLabel("all");
+    setOrderSelectLabel("asc");
+    //our function
+    await dispatch(getRecipes());
   }
   //invert order
-  function handleInvertOrder() {
+  const [orderSelectLabel, setOrderSelectLabel] = useState("asc");
+  function handleInvertOrder(e) {
     e.preventDefault();
-    dispatch(invertOrder);
+    //resets
+    setScoreSelectLabel("all");
+    dispatch(filterByScore("all"));
+    setDietSelectLabel("all");
+    dispatch(filterByDiets("all"));
+    //function
+    setOrderSelectLabel(e.target.value);
+    dispatch(invertOrder(e.target.value));
   }
   //diet filter
   const [dietSelectLabel, setDietSelectLabel] = useState("all");
   function handleFilterByDiet(e) {
     //resets
+    setOrderSelectLabel("asc");
+    dispatch(invertOrder("asc"));
     setScoreSelectLabel("all");
     dispatch(filterByScore("all"));
     //function
@@ -68,6 +80,8 @@ export default function Home() {
   const [scoreSelectLabel, setScoreSelectLabel] = useState("all");
   function handleFilterByScore(e) {
     //resets
+    setOrderSelectLabel("asc");
+    dispatch(invertOrder("asc"));
     setDietSelectLabel("all");
     dispatch(filterByDiets("all"));
     //function
@@ -79,17 +93,24 @@ export default function Home() {
   return (
     <div>
       <h1 className={styles.title}>Search Recipes!</h1>
+      <SearchBar />
       <div>
         <div>
           <label>Alphabetical order:&#160;</label>
-          <select onChange={(e) => handleInvertOrder(e)}>
+          <select
+            value={orderSelectLabel}
+            onChange={(e) => handleInvertOrder(e)}
+          >
             <option value="asc">Ascendent</option>
             <option value="desc">Descendent</option>
           </select>
         </div>
         <div>
           <label>Filter by diet:&#160;</label>
-          <select value={dietSelectLabel} onChange={() => handleFilterByDiet()}>
+          <select
+            value={dietSelectLabel}
+            onChange={(e) => handleFilterByDiet(e)}
+          >
             <option value="all">No filter</option>
             <option value="vegetarian">Vegetarian</option>
             <option value="gluten free">Gluten free</option>
@@ -143,7 +164,7 @@ export default function Home() {
             );
           })
         ) : (
-          <p className={styles.title}>Loading...</p>
+          <p className={styles.title}>Loading...</p> //solucionar esto convirtiendolo en un estado local que por defecto sea loading pero que las request nulas modifiquien a nothing here apenas y siempre dado el onchange
         )}
       </div>
       <Paging

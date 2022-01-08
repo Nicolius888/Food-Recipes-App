@@ -15,12 +15,16 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         recipes: [],
+        recipesCopy: [],
       };
     case "INVERT_ORDER":
-      const recipesInverted = state.recipes.slice().reverse();
+      const allRecipes3 = state.recipesCopy;
+      const recipesInverted = allRecipes3.reverse();
+      // const recipesInverted = state.recipesCopy.reverse();
+      // const order = action.payload === "asc" ? allRecipes3 : recipesInverted;
       return {
         ...state,
-        countries: recipesInverted,
+        recipes: recipesInverted,
       };
     case "FILTER_BY_DIETS":
       const allRecipes = state.recipesCopy; //filter trough the copy
@@ -43,6 +47,11 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         recipes: scoreFilter,
+      };
+    case "SEARCH_BY_NAME":
+      return {
+        ...state,
+        recipes: action.payload,
       };
     default:
       return state;
