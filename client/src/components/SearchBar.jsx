@@ -10,6 +10,7 @@ export default function SearchBar() {
   function handleChange(e) {
     e.preventDefault();
     setName(e.target.value);
+    dispatch(searchByName(name));
   }
 
   function handleSubmit(e) {
