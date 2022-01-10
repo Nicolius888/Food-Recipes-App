@@ -21,3 +21,9 @@
   font-style: italic;
   font-variant: small-caps;
 }
+.filterBox {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 30px;
+}

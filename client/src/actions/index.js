@@ -51,3 +51,39 @@ export function searchByName(payload) {
     }
   };
 }
+export function postRecipe(payload) {
+  return async function () {
+    const postRecipe = await axios.post(
+      "http://localhost:3001/create",
+      payload
+    );
+    return postRecipe;
+  };
+}
+export function getTypes() {
+  return async function (dispatch) {
+    try {
+      const types = await axios.get("http://localhost:3001/types", {});
+      return dispatch({
+        type: "GET_TYPES",
+        payload: types.data,
+      });
+    } catch (error) {
+      console.log("Error getting types", error);
+    }
+  };
+}
+export function getDetail(id) {
+  return async function (dispatch) {
+    try {
+      const detail = await axios.get(`http://localhost:3001/recipes/${id}`);
+      console.log(detail);
+      return dispatch({
+        type: "GET_DETAIL",
+        payload: detail.data,
+      });
+    } catch (error) {
+      console.log("Error getting detail", error);
+    }
+  };
+}

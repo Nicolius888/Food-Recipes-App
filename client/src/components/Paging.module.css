@@ -9,9 +9,11 @@
   justify-content: center;
   align-items: center;
   flex-direction: row;
-  color: #145288b4;
-  border-color: #2195f393;
-  background: transparent;
+  width: 2rem;
+  height: 2rem;
+  color: #2f8814b4;
+  border-color: #44f32193;
+  background: #f3f3f371;
   border-radius: 1px;
   border-width: 1px;
   border-style: solid;
@@ -22,15 +24,16 @@
   margin: 2px;
 }
 .pagingButton:hover {
-  background: #2196f3;
+  background: #75f321;
   color: #fff;
   border-radius: 30px;
-  text-shadow: 1px 1px 2px #427388;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  text-shadow: 1px 1px 2px #588842;
+  box-shadow: 0 0 20px rgba(26, 31, 6, 0.863);
 }
 .liTag {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  color: #2f8814b4;
 }

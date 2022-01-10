@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,6 +17,7 @@ import SearchBar from "./SearchBar";
 export default function Home() {
   const dispatch = useDispatch();
   const recipesState = useSelector((state) => state.recipes);
+  const [name, setName] = useState(""); //to use in search bar, and reset when "reaload recipes" is clicked.
 
   useEffect(() => {
     dispatch(getRecipes());
@@ -44,6 +45,7 @@ export default function Home() {
     dispatch(deleteRecipes());
     //resets...
     setCurrentPage(1);
+    setName("");
     setDietSelectLabel("all");
     setScoreSelectLabel("all");
     setOrderSelectLabel("asc");
@@ -89,12 +91,12 @@ export default function Home() {
     paging(1);
     dispatch(filterByScore(e.target.value));
   }
-  //idea, creo que si cada filtro se resetea en all antes de cada cambio, podrian ser acumulables...hacerlos funcionar luego analizar...
+  //idea, creo que si cada filtro se resetea en all antes de cada cambio, podrian ser acumulables...
   return (
     <div>
       <h1 className={styles.title}>Search Recipes!</h1>
-      <SearchBar />
-      <div>
+      <SearchBar name={name} setName={setName} />
+      <div className={styles.filterBox}>
         <div>
           <label>Alphabetical order:&#160;</label>
           <select
@@ -143,24 +145,32 @@ export default function Home() {
             <option value="99">90 to 100</option>
           </select>
         </div>
+
+        <Link to="/create">
+          <button>Add a new recipe</button>
+        </Link>
+
+        <button onClick={(e) => handleReload(e)}>Reload recipes</button>
       </div>
-
-      <Link to="/create">
-        <button>Add a new recipe</button>
-      </Link>
-
-      <button onClick={(e) => handleReload(e)}>Reload recipes</button>
 
       <div className={styles.cards}>
         {currentRecipes.length ? (
           currentRecipes.map((recipe) => {
             return (
-              <Card
-                key={recipe.id}
-                name={recipe.name}
-                image={recipe.img}
-                diets={recipe.diet}
-              />
+              <Fragment key={recipe.id}>
+                <Link
+                  to={`/home/${recipe.id}`}
+                  key={recipe.id}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <Card
+                    key={recipe.id}
+                    name={recipe.name}
+                    image={recipe.img}
+                    diets={recipe.diet}
+                  />
+                </Link>
+              </Fragment>
             );
           })
         ) : (

@@ -1,6 +1,8 @@
 const initialState = {
   recipes: [],
   recipesCopy: [],
+  types: [],
+  detail: [],
 };
 
 function rootReducer(state = initialState, action) {
@@ -52,6 +54,17 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         recipes: action.payload,
+      };
+    case "GET_TYPES":
+      return {
+        ...state,
+        types: action.payload,
+      };
+    case "GET_DETAIL":
+      console.log(action.payload);
+      return {
+        ...state,
+        detail: action.payload,
       };
     default:
       return state;

@@ -15,19 +15,20 @@ export default function paging({ recipesPerPage, recipesState, paging }) {
   return (
     <div className="paging">
       <ul className={styles.pagingList}>
-        {pageNumbers.map((number) => {
-          return (
-            <li key={number} className={styles.liTag}>
-              <button
-                id={number}
-                className={styles.pagingButton}
-                onClick={handleClick}
-              >
-                {number}
-              </button>
-            </li>
-          );
-        })}
+        {pageNumbers.length > 1 &&
+          pageNumbers.map((number) => {
+            return (
+              <li key={number} className={styles.liTag}>
+                <button
+                  id={number}
+                  className={styles.pagingButton}
+                  onClick={handleClick}
+                >
+                  {number}
+                </button>
+              </li>
+            );
+          })}
       </ul>
     </div>
   );

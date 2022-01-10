@@ -101,7 +101,7 @@ const getRecipes = async () => {
   return totalGet;
 };
 
-//ROUTES: //RUTAS:                    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+//ROUTES:                 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 router.get("/recipes", async (req, res) => {
   const recipes = await getRecipes();
   const { name } = req.query;
@@ -151,7 +151,7 @@ router.get("/types", async (req, res) => {
 
 router.post("/recipes", async (req, res) => {
   const { name, resume, score, healtScore, steps, img, createdInDb, diets } =
-    req.body; //diets is an array with string of types of diets
+    req.body; //diets is an array with strings of types of diets
 
   const create = await Recipe.create({
     //create the recipe in the DB
