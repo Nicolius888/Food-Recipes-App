@@ -17,8 +17,8 @@ router.use(
 );
 
 //FUNCTIONS/GETS/FILTERS TO USE IN ROUTES:
-//get api recipes
 
+//get api recipes
 const getApiRecipes = async () => {
   const recipesGet = await axios.get(
     `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
@@ -30,11 +30,17 @@ const getApiRecipes = async () => {
       resume: recipe.summary,
       score: Math.round(recipe.spoonacularScore),
       healtScore: Math.round(recipe.healthScore),
-      steps: recipe.analyzedInstructions.map((e) =>
-        e.steps.map((el) => el.step)
-      ),
+      steps: recipe.analyzedInstructions
+        .map((e) => e.steps.map((el) => el.step))
+        .flat(),
       img: recipe.image,
-      diet: recipe.diets,
+      dishTypes: recipe.dishTypes,
+      // diet: recipe.diets, //esto lo reemplazo con la linea de abajo para normalizar el formato
+      // en favor de los traidos por DB
+      //but, para usarlo en el front, hay que usar Diets.map((e) => e).map((e) => e.name) para convertirlo en array
+      //todo esto xq el formato de las dietas traidas por DB no es normalizable, o al menos no eh encontrado la manera
+      //pero todavia lo tomo como provisorio
+      Diets: recipe.diets.map((e) => ({ name: `${e}` })),
     };
   });
   return recipesFiltered;
@@ -96,11 +102,19 @@ const findFoods = async () => {
 //api recipes + DB created.
 const getRecipes = async () => {
   const apiRecipes = await getApiRecipes();
-  const dbFoods = await findFoods();
-  const totalGet = apiRecipes.concat(dbFoods);
+  // apiRecipes.map((recipe) => { //this cant be done in dbFoods u_u
+  //   if (recipe.Diets) {
+  //     let replace = recipe.Diets.map((e) => e).map((e) => e.name);
+  //     recipe.Diets = replace;
+  //     return recipe;
+  //   } else {
+  //     return recipe;
+  //   }
+  // });
+  let dbFoods = await findFoods();
+  let totalGet = apiRecipes.concat(dbFoods);
   return totalGet;
 };
-
 //ROUTES:                 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 router.get("/recipes", async (req, res) => {
   const recipes = await getRecipes();
@@ -139,7 +153,7 @@ router.get("/recipes/:id", async (req, res) => {
   if (id) {
     let recipeId = await recipes.filter((recipe) => recipe.id == id);
     recipeId.length
-      ? res.status(200).json(recipeId)
+      ? res.status(200).json(recipeId[0]) //to convert this [{}], to this {}
       : res.status(400).send("id not found (◡‿◡*)");
   }
 });

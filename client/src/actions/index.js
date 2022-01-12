@@ -77,7 +77,6 @@ export function getDetail(id) {
   return async function (dispatch) {
     try {
       const detail = await axios.get(`http://localhost:3001/recipes/${id}`);
-      console.log(detail);
       return dispatch({
         type: "GET_DETAIL",
         payload: detail.data,
@@ -85,5 +84,10 @@ export function getDetail(id) {
     } catch (error) {
       console.log("Error getting detail", error);
     }
+  };
+}
+export function deleteDetail() {
+  return {
+    type: "DELETE_DETAIL",
   };
 }

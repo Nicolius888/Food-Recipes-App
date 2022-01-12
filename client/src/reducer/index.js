@@ -61,10 +61,14 @@ function rootReducer(state = initialState, action) {
         types: action.payload,
       };
     case "GET_DETAIL":
-      console.log(action.payload);
       return {
         ...state,
         detail: action.payload,
+      };
+    case "DELETE_DETAIL":
+      return {
+        ...state,
+        detail: [],
       };
     default:
       return state;

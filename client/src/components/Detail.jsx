@@ -1,26 +1,30 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { getDetail } from "../actions";
+import { getDetail, deleteDetail } from "../actions";
 
 export default function Detail() {
   const dispatch = useDispatch();
   const detailState = useSelector((state) => state.detail);
   const { id } = useParams();
-  console.log(id);
-
+  console.log(detailState);
   useEffect(() => {
+    dispatch(deleteDetail());
     dispatch(getDetail(id));
   }, [dispatch]);
 
-  console.log(detailState);
   return (
     <div>
-      {detailState.length > 0 ? (
-        <h1>{detailState[0].name}</h1>
+      {detailState.id ? (
+        <>
+          <h1>{detailState.name}</h1>
+          <h2>{detailState.diet}</h2>
+        </>
       ) : (
         <h1>Loading...</h1>
       )}
     </div>
   );
 }
+
+// Diets.map((e) => e).map((e) => e.name)
