@@ -35,12 +35,13 @@ const getApiRecipes = async () => {
         .flat(),
       img: recipe.image,
       dishTypes: recipe.dishTypes,
+      Diets: recipe.diets,
       // diet: recipe.diets, //esto lo reemplazo con la linea de abajo para normalizar el formato
       // en favor de los traidos por DB
       //but, para usarlo en el front, hay que usar Diets.map((e) => e).map((e) => e.name) para convertirlo en array
       //todo esto xq el formato de las dietas traidas por DB no es normalizable, o al menos no eh encontrado la manera
       //pero todavia lo tomo como provisorio
-      Diets: recipe.diets.map((e) => ({ name: `${e}` })),
+      // Diets: recipe.diets.map((e) => ({ name: `${e}` })),
     };
   });
   return recipesFiltered;
@@ -164,8 +165,17 @@ router.get("/types", async (req, res) => {
 });
 
 router.post("/recipes", async (req, res) => {
-  const { name, resume, score, healtScore, steps, img, createdInDb, diets } =
-    req.body; //diets is an array with strings of types of diets
+  const {
+    name,
+    resume,
+    score,
+    healtScore,
+    steps,
+    img,
+    dishTypes,
+    createdInDb,
+    diets,
+  } = req.body; //diets is an array with strings of types of diets
 
   const create = await Recipe.create({
     //create the recipe in the DB
@@ -175,6 +185,7 @@ router.post("/recipes", async (req, res) => {
     healtScore,
     steps,
     img,
+    dishTypes,
     createdInDb,
   });
 
@@ -188,7 +199,7 @@ router.post("/recipes", async (req, res) => {
 
   dietIds.map(async (id) => {
     //set the relationship by id, and add it to the recipe creator
-    await create.addDiet(id);
+    await create.addDiets(id);
   });
   res.status(201).json(create); //return the "201 created", and the recipe created.
 });

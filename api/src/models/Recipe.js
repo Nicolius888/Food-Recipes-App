@@ -25,11 +25,14 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
     },
     steps: {
-      type: DataTypes.JSON,
+      type: DataTypes.TEXT,
     },
     img: {
       type: DataTypes.STRING,
       defaultValue: "C:/Users/Nico_/Documents/Repo/pi/PI-Food-main/cooking.png",
+    },
+    dishTypes: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
     },
     createdInDb: {
       type: DataTypes.BOOLEAN,

@@ -54,7 +54,7 @@ export function searchByName(payload) {
 export function postRecipe(payload) {
   return async function () {
     const postRecipe = await axios.post(
-      "http://localhost:3001/create",
+      "http://localhost:3001/recipes",
       payload
     );
     return postRecipe;

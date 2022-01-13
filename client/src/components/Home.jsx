@@ -167,7 +167,11 @@ export default function Home() {
                     key={recipe.id}
                     name={recipe.name}
                     image={recipe.img}
-                    diets={recipe.Diets.map((e) => e).map((e) => e.name)}
+                    diets={
+                      recipe.createdInDb
+                        ? recipe.Diets.map((e) => e).map((e) => e.name)
+                        : recipe.Diets
+                    }
                   />
                 </Link>
               </Fragment>

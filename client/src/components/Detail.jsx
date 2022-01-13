@@ -7,7 +7,19 @@ export default function Detail() {
   const dispatch = useDispatch();
   const detailState = useSelector((state) => state.detail);
   const { id } = useParams();
-  console.log(detailState);
+
+  const {
+    name,
+    Diets,
+    img,
+    resume,
+    dishTypes,
+    healtScore,
+    score,
+    steps,
+    createdInDb,
+  } = detailState;
+
   useEffect(() => {
     dispatch(deleteDetail());
     dispatch(getDetail(id));
@@ -16,13 +28,24 @@ export default function Detail() {
   return (
     <div>
       {detailState.id ? (
-        <>
-          <h1>{detailState.name}</h1>
-          <h2>{detailState.diet}</h2>
-        </>
+        <div key={id}>
+          <h1>{name}</h1>
+          <h2>
+            {createdInDb ? Diets.map((e) => e).map((e) => e.name) : Diets}
+          </h2>
+          <img src={img} alt="img error" width="250px" height="150px" />
+          <h3>Dish Types:{dishTypes}</h3>
+          <h3>Healt Score:{healtScore}</h3>
+          <h3>Score:{score}</h3>
+          <div dangerouslySetInnerHTML={{ __html: resume }} />
+          <p>Steps: {steps}</p>
+        </div>
       ) : (
         <h1>Loading...</h1>
       )}
+      <Link to="/home">
+        <button>Back to Home</button>
+      </Link>
     </div>
   );
 }
