@@ -32,6 +32,9 @@ export default function Create() {
     dishTypes: [],
     diets: [],
   });
+  // console.log(input.dishTypes.length);
+  console.log(input.diets.length);
+  console.log(input.dishTypes.length);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   function handleNameChange(e) {
@@ -143,31 +146,65 @@ export default function Create() {
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  function handleDishCheckbox(e) {
-    let newArray = [...input.dishTypes];
-    if (e.target.checked) {
-      newArray.push(e.target.value);
-    } else {
-      newArray = newArray.filter((item) => item !== e.target.value);
+  function handleDietCheckbox(e) {
+    if (e.target.checked === true) {
+      setInput({
+        ...input,
+        diets: [...input.diets, e.target.value],
+      });
+      setErrors({
+        ...errors,
+        diets: "",
+      });
+    } else if (e.target.checked === false) {
+      setInput({
+        ...input,
+        diets: input.diets.filter((diet) => diet !== e.target.value),
+      });
+      validateDiet();
     }
-    setInput({
-      ...input,
-      dishTypes: newArray,
-    });
   }
 
-  function handleDietCheckbox(e) {
-    let newArray2 = [...input.diets];
-    if (e.target.checked) {
-      newArray2.push(e.target.value);
-    } else {
-      newArray2 = newArray2.filter((item) => item !== e.target.value);
+  function validateDiet() {
+    //this has to be validated outside the mean handle, to read the actual scope of the state...
+    if (input.diets.length === 1) {
+      setErrors({
+        ...errors,
+        diets: "● Please, select at least one diet type ●",
+      });
     }
-    setInput({
-      ...input,
-      dishTypes: newArray2,
-    });
   }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  function handleDishCheckbox(e) {
+    if (e.target.checked === true) {
+      setInput({
+        ...input,
+        dishTypes: [...input.dishTypes, e.target.value],
+      });
+      setErrors({
+        ...errors,
+        dishTypes: "",
+      });
+    } else if (e.target.checked === false) {
+      setInput({
+        ...input,
+        dishTypes: input.dishTypes.filter((dish) => dish !== e.target.value),
+      });
+      validateDish();
+    }
+  }
+
+  function validateDish() {
+    //this has to be validated outside the mean handle, to read the actual scope of the state...
+    if (input.dishTypes.length === 1) {
+      setErrors({
+        ...errors,
+        dishTypes: "● Please, select at least one dish type ●",
+      });
+    }
+  }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -271,7 +308,7 @@ export default function Create() {
               type="checkbox"
               value="vegetarian"
               name="diets"
-              onClick={(e) => handleDietCheckbox(e)}
+              onChange={(e) => handleDietCheckbox(e)}
             />
             Vegetarian&#160;
           </label>
@@ -280,7 +317,7 @@ export default function Create() {
               type="checkbox"
               value="ketogenic"
               name="ketogenic"
-              onClick={(e) => handleDietCheckbox(e)}
+              onChange={(e) => handleDietCheckbox(e)}
             />
             Ketogenic&#160;
           </label>
@@ -289,7 +326,7 @@ export default function Create() {
               type="checkbox"
               value="gluten free"
               name="gluten free"
-              onClick={(e) => handleDietCheckbox(e)}
+              onChange={(e) => handleDietCheckbox(e)}
             />
             Gluten free&#160;
           </label>
@@ -298,7 +335,7 @@ export default function Create() {
               type="checkbox"
               value="dairy free"
               name="dairy free"
-              onClick={(e) => handleDietCheckbox(e)}
+              onChange={(e) => handleDietCheckbox(e)}
             />
             Dairy free&#160;
           </label>
@@ -307,7 +344,7 @@ export default function Create() {
               type="checkbox"
               value="lacto ovo vegetarian"
               name="lacto ovo vegetarian"
-              onClick={(e) => handleDietCheckbox(e)}
+              onChange={(e) => handleDietCheckbox(e)}
             />
             Lacto ovo vegetarian&#160;
           </label>
@@ -316,7 +353,7 @@ export default function Create() {
               type="checkbox"
               value="vegan"
               name="vegan"
-              onClick={(e) => handleDietCheckbox(e)}
+              onChange={(e) => handleDietCheckbox(e)}
             />
             Vegan&#160;
           </label>
@@ -325,7 +362,7 @@ export default function Create() {
               type="checkbox"
               value="paleolithic"
               name="paleolithic"
-              onClick={(e) => handleDietCheckbox(e)}
+              onChange={(e) => handleDietCheckbox(e)}
             />
             Paleolithic&#160;
           </label>
@@ -334,7 +371,7 @@ export default function Create() {
               type="checkbox"
               value="primal"
               name="primal"
-              onClick={(e) => handleDietCheckbox(e)}
+              onChange={(e) => handleDietCheckbox(e)}
             />
             Primal&#160;
           </label>
@@ -343,7 +380,7 @@ export default function Create() {
               type="checkbox"
               value="pescatarian"
               name="pescatarian"
-              onClick={(e) => handleDietCheckbox(e)}
+              onChange={(e) => handleDietCheckbox(e)}
             />
             Pescatarian&#160;
           </label>
@@ -352,7 +389,7 @@ export default function Create() {
               type="checkbox"
               value="fodmap friendly"
               name="fodmap friendly"
-              onClick={(e) => handleDietCheckbox(e)}
+              onChange={(e) => handleDietCheckbox(e)}
             />
             Fodmap friendly&#160;
           </label>
@@ -361,10 +398,11 @@ export default function Create() {
               type="checkbox"
               value="whole 30"
               name="whole 30"
-              onClick={(e) => handleDietCheckbox(e)}
+              onChange={(e) => handleDietCheckbox(e)}
             />
             Whole 30&#160;
           </label>
+          {errors.diets && <h6 className="error">{errors.diets}</h6>}
         </div>
         {/*/////////////////////////////////////////////////////////////////////*/}
         <div>
@@ -374,7 +412,7 @@ export default function Create() {
               type="checkbox"
               value="side dish"
               name="side dish"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             side dish
           </label>
@@ -383,7 +421,7 @@ export default function Create() {
               type="checkbox"
               value="lunch"
               name="lunch"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             lunch
           </label>
@@ -392,7 +430,7 @@ export default function Create() {
               type="checkbox"
               value="main course"
               name="main course"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             main course
           </label>
@@ -401,7 +439,7 @@ export default function Create() {
               type="checkbox"
               value="main dish"
               name="main dish"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             main dish
           </label>
@@ -410,7 +448,7 @@ export default function Create() {
               type="checkbox"
               value="dinner"
               name="dinner"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             dinner
           </label>
@@ -419,7 +457,7 @@ export default function Create() {
               type="checkbox"
               value="morning meal"
               name="morning meal"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             morning meal
           </label>
@@ -428,7 +466,7 @@ export default function Create() {
               type="checkbox"
               value="brunch"
               name="brunch"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             brunch
           </label>
@@ -437,7 +475,7 @@ export default function Create() {
               type="checkbox"
               value="breakfast"
               name="breakfast"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             breakfast
           </label>
@@ -446,7 +484,7 @@ export default function Create() {
               type="checkbox"
               value="soup"
               name="soup"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             soup
           </label>
@@ -455,7 +493,7 @@ export default function Create() {
               type="checkbox"
               value="salad"
               name="salad"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             salad
           </label>
@@ -464,7 +502,7 @@ export default function Create() {
               type="checkbox"
               value="condiment"
               name="condiment"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             condiment
           </label>
@@ -473,7 +511,7 @@ export default function Create() {
               type="checkbox"
               value="dip"
               name="dip"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             dip
           </label>
@@ -482,7 +520,7 @@ export default function Create() {
               type="checkbox"
               value="sauce"
               name="sauce"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             sauce
           </label>
@@ -491,10 +529,13 @@ export default function Create() {
               type="checkbox"
               value="spread"
               name="spread"
-              onClick={(e) => handleDishCheckbox(e)}
+              onChange={(e) => handleDishCheckbox(e)}
             ></input>
             spread
           </label>
+          {errors.dishTypes.length ? (
+            <h6 className="error">{errors.dishTypes}</h6>
+          ) : null}
         </div>
       </form>
       <Link to="/home">
