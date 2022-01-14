@@ -28,20 +28,14 @@ const getApiRecipes = async () => {
       id: recipe.id,
       name: recipe.title,
       resume: recipe.summary,
-      score: Math.round(recipe.spoonacularScore),
-      healtScore: Math.round(recipe.healthScore),
+      score: recipe.spoonacularScore - 90,
+      healtScore: recipe.healthScore - 90,
       steps: recipe.analyzedInstructions
         .map((e) => e.steps.map((el) => el.step))
         .flat(),
       img: recipe.image,
       dishTypes: recipe.dishTypes,
       Diets: recipe.diets,
-      // diet: recipe.diets, //esto lo reemplazo con la linea de abajo para normalizar el formato
-      // en favor de los traidos por DB
-      //but, para usarlo en el front, hay que usar Diets.map((e) => e).map((e) => e.name) para convertirlo en array
-      //todo esto xq el formato de las dietas traidas por DB no es normalizable, o al menos no eh encontrado la manera
-      //pero todavia lo tomo como provisorio
-      // Diets: recipe.diets.map((e) => ({ name: `${e}` })),
     };
   });
   return recipesFiltered;
@@ -103,15 +97,6 @@ const findFoods = async () => {
 //api recipes + DB created.
 const getRecipes = async () => {
   const apiRecipes = await getApiRecipes();
-  // apiRecipes.map((recipe) => { //this cant be done in dbFoods u_u
-  //   if (recipe.Diets) {
-  //     let replace = recipe.Diets.map((e) => e).map((e) => e.name);
-  //     recipe.Diets = replace;
-  //     return recipe;
-  //   } else {
-  //     return recipe;
-  //   }
-  // });
   let dbFoods = await findFoods();
   let totalGet = apiRecipes.concat(dbFoods);
   return totalGet;

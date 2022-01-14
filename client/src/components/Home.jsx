@@ -133,16 +133,16 @@ export default function Home() {
             onChange={(e) => handleFilterByScore(e)}
           >
             <option value="all">No filter</option>
-            <option value="90">0 to 10</option>
-            <option value="91">10 to 20</option>
-            <option value="92">20 to 30</option>
-            <option value="93">30 to 40</option>
-            <option value="94">40 to 50</option>
-            <option value="95">50 to 60</option>
-            <option value="96">60 to 70</option>
-            <option value="97">70 to 80</option>
-            <option value="98">80 to 90</option>
-            <option value="99">90 to 100</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
           </select>
         </div>
 

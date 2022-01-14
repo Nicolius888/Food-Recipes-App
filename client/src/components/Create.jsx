@@ -7,12 +7,21 @@ import styles from "./Create.module.css";
 export default function Create() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const typesState = useSelector((state) => state.types);
+
   useEffect(() => {
     dispatch(getTypes());
   }, [dispatch]);
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({
+    name: "",
+    resume: "",
+    score: "",
+    healtScore: "",
+    steps: "",
+    img: "",
+    dishTypes: "",
+    diets: "",
+  });
   const [input, setInput] = useState({
     name: "",
     resume: "",
@@ -24,18 +33,116 @@ export default function Create() {
     diets: [],
   });
 
-  function handleChange(e) {
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  function handleNameChange(e) {
+    console.log(e.target.value);
+    if (e.target.value.length < 5)
+      setErrors({
+        ...errors,
+        name: "● The name has to be 5 or more characters long ●",
+      });
+    else
+      setErrors({
+        ...errors,
+        name: "",
+      });
     setInput({
       ...input,
-      [e.target.name]: e.target.value,
+      name: e.target.value,
     });
-    setErrors(
-      validate({
-        ...input,
-        [e.target.name]: e.target.value,
-      })
-    );
   }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  function handleResumeChange(e) {
+    console.log(e.target.value);
+    if (e.target.value.length < 10)
+      setErrors({
+        ...errors,
+        resume:
+          "● Please, make description of the plate in 10 characters or more ●",
+      });
+    else
+      setErrors({
+        ...errors,
+        resume: "",
+      });
+    setInput({
+      ...input,
+      resume: e.target.value,
+    });
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  function handleScoreChange(e) {
+    console.log(e.target.value);
+    if (e.target.value == "") {
+      setErrors({
+        ...errors,
+        score: "● Please, select a score ●",
+      });
+    } else {
+      setErrors({
+        ...errors,
+        score: "",
+      });
+      setInput({
+        ...input,
+        score: e.target.value,
+      });
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  function handleHealtScoreChange(e) {
+    console.log(e.target.value);
+    if (e.target.value == "") {
+      setErrors({
+        ...errors,
+        healtScore: "● Please, select a healty score ●",
+      });
+    } else {
+      setErrors({
+        ...errors,
+        healtScore: "",
+      });
+      setInput({
+        ...input,
+        healtScore: e.target.value,
+      });
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  function isValidURL(str) {
+    var regexp =
+      /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+    if (regexp.test(str)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function handleImgChange(e) {
+    console.log(e.target.value);
+    if (!isValidURL(e.target.value)) {
+      setErrors({
+        ...errors,
+        img: "● Please, provide a URL with an image of the plate ●",
+      });
+    } else {
+      setErrors({
+        ...errors,
+        img: "",
+      });
+      setInput({
+        ...input,
+        img: e.target.value,
+      });
+    }
+  }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   function handleDishCheckbox(e) {
     let newArray = [...input.dishTypes];
@@ -80,42 +187,6 @@ export default function Create() {
     navigate("/home");
   }
 
-  function isValidURL(str) {
-    var regexp =
-      /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-    if (regexp.test(str)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  function validate(input) {
-    let errors = {};
-    if (!input.name) {
-      errors.name = "● The recipe requires a Name to bo created ●";
-    } else if (!input.resume) {
-      errors.resume = "● Please, make a short description of the plate ●";
-    } else if (
-      !Number.isInteger(input.score) &&
-      input.score < 0 &&
-      input.score > 100
-    ) {
-      errors.score = "● Give it a score from 0 to 100 :) ●";
-    } else if (
-      !Number.isInteger(input.healtScore) &&
-      input.healtScore < 0 &&
-      input.healtScore > 100
-    ) {
-      errors.healtScore = "● From 0 to 100, how healty is this recipe? ●";
-    } else if (!input.steps) {
-      errors.steps = "● Please, describe a few basics steps... ●";
-    } else if (isValidURL(input.img)) {
-      errors.img = "● This has to be a link to an image of the plate ●";
-    }
-    return errors;
-  }
-
   return (
     <div>
       <h1>Add a new recipe</h1>
@@ -128,10 +199,11 @@ export default function Create() {
             placeholder="name..."
             value={input.name}
             name="name"
-            onChange={(e) => handleChange(e)}
+            onChange={(e) => handleNameChange(e)}
           ></input>
-          {errors.name && <p className="error">{errors.name}</p>}
+          {errors.name && <h6 className="error">{errors.name}</h6>}
         </div>
+        {/*/////////////////////////////////////////////////////////////////////*/}
         <div>
           <label>Resume:&#160;</label>
           <input
@@ -139,43 +211,47 @@ export default function Create() {
             placeholder="resume..."
             value={input.resume}
             name="resume"
-            onChange={(e) => handleChange(e)}
+            onChange={(e) => handleResumeChange(e)}
           ></input>
-          {errors.resume && <p className="error">{errors.resume}</p>}
+          {errors.resume && <h6 className="error">{errors.resume}</h6>}
         </div>
+        {/*/////////////////////////////////////////////////////////////////////*/}
         <div>
-          <label>Score&#160;</label>
-          <input
-            type="text"
-            placeholder="score..."
-            value={input.score}
-            name="score"
-            onChange={(e) => handleChange(e)}
-          ></input>
-          {errors.score && <p className="error">{errors.score}</p>}
+          <label>Score:&#160;</label>
+          <select onChange={(e) => handleScoreChange(e)}>
+            <option value="">--</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+          {errors.score && <h6 className="error">{errors.score}</h6>}
         </div>
+        {/*/////////////////////////////////////////////////////////////////////*/}
         <div>
-          <label>Healty Score:&#160;</label>
-          <input
-            type="text"
-            placeholder="healty score..."
-            value={input.healtScore}
-            name="healtScore"
-            onChange={(e) => handleChange(e)}
-          ></input>
-          {errors.healtScore && <p className="error">{errors.healtScore}</p>}
+          <label>Heatly Score:&#160;</label>
+          <select onChange={(e) => handleHealtScoreChange(e)}>
+            <option value="">--</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+          {errors.healtScore && <h6 className="error">{errors.healtScore}</h6>}
         </div>
-        <div>
-          <label>Steps:&#160;</label>
-          <input
-            type="text"
-            placeholder="steps..."
-            value={input.steps}
-            name="steps"
-            onChange={(e) => handleChange(e)}
-          ></input>
-          {errors.steps && <p className="error">{errors.steps}</p>}
-        </div>
+        {/*/////////////////////////////////////////////////////////////////////*/}
         <div>
           <label>Image:&#160;</label>
           <input
@@ -183,10 +259,12 @@ export default function Create() {
             placeholder="url..."
             value={input.img}
             name="img"
-            onChange={(e) => handleChange(e)}
+            onChange={(e) => handleImgChange(e)}
           ></input>
-          {errors.img && <p className="error">{errors.img}</p>}
+          <input type="image" id="image" alt="" src={input.img}></input>
+          {errors.img && <h6 className="error">{errors.img}</h6>}
         </div>
+        {/*/////////////////////////////////////////////////////////////////////*/}
         <div>
           <label>Type/s of diet:&#160;</label>
           <label>
@@ -289,6 +367,7 @@ export default function Create() {
             Whole 30&#160;
           </label>
         </div>
+        {/*/////////////////////////////////////////////////////////////////////*/}
         <div>
           <label>Type/s of dish:&#160;</label>
           <label>
