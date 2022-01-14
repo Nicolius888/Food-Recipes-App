@@ -76,7 +76,7 @@ export default function Create() {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   function handleScoreChange(e) {
     console.log(e.target.value);
-    if (e.target.value == "") {
+    if (e.target.value === "") {
       setErrors({
         ...errors,
         score: "● Please, select a score ●",
@@ -96,7 +96,7 @@ export default function Create() {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   function handleHealtScoreChange(e) {
     console.log(e.target.value);
-    if (e.target.value == "") {
+    if (e.target.value === "") {
       setErrors({
         ...errors,
         healtScore: "● Please, select a healty score ●",
@@ -126,21 +126,20 @@ export default function Create() {
 
   function handleImgChange(e) {
     console.log(e.target.value);
-    if (!isValidURL(e.target.value)) {
+    if (isValidURL(`${e.target.value}`) === false)
       setErrors({
         ...errors,
-        img: "● Please, provide a URL with an image of the plate ●",
+        img: "● Please, insert a valid URL ●",
       });
-    } else {
+    else
       setErrors({
         ...errors,
         img: "",
       });
-      setInput({
-        ...input,
-        img: e.target.value,
-      });
-    }
+    setInput({
+      ...input,
+      img: e.target.value,
+    });
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -261,7 +260,7 @@ export default function Create() {
             name="img"
             onChange={(e) => handleImgChange(e)}
           ></input>
-          <input type="image" id="image" alt="" src={input.img}></input>
+          {/* <input type="image" id="image" alt="m" src={input.img}></input> */}
           {errors.img && <h6 className="error">{errors.img}</h6>}
         </div>
         {/*/////////////////////////////////////////////////////////////////////*/}
