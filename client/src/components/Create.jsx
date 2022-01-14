@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getTypes, postRecipe } from "../actions";
@@ -27,14 +27,11 @@ export default function Create() {
     resume: "",
     score: "",
     healtScore: "",
-    steps: "",
+    steps: [],
     img: "",
     dishTypes: [],
     diets: [],
   });
-  // console.log(input.dishTypes.length);
-  console.log(input.diets.length);
-  console.log(input.dishTypes.length);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   function handleNameChange(e) {
@@ -205,6 +202,37 @@ export default function Create() {
     }
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const [step, setStep] = useState("");
+
+  function handleStepInput(e) {
+    setStep(`${e.target.value}`);
+  }
+
+  function handleAddStep(e) {
+    e.preventDefault();
+    if (step === "") return;
+    setInput({
+      ...input,
+      steps: [...input.steps, step],
+    });
+    setStep("");
+  }
+
+  function handleDeleteStep(e, step) {
+    console.log(step);
+    e.preventDefault();
+    setInput({
+      ...input,
+      steps: [
+        input.steps.filter((e) => {
+          e !== step;
+        }),
+      ],
+    });
+  }
+  console.log(input.steps);
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -222,7 +250,8 @@ export default function Create() {
     });
     navigate("/home");
   }
-
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
       <h1>Add a new recipe</h1>
@@ -288,6 +317,35 @@ export default function Create() {
           {errors.healtScore && <h6 className="error">{errors.healtScore}</h6>}
         </div>
         {/*/////////////////////////////////////////////////////////////////////*/}
+        <div>
+          <label>Steps:&#160;</label>
+          <input
+            type="text"
+            placeholder="add steps..."
+            name="stepAdd"
+            value={step}
+            onChange={(e) => handleStepInput(e)}
+          ></input>
+          <button type="submit" onClick={(e) => handleAddStep(e)}>
+            Add
+          </button>
+          {input.steps &&
+            input.steps.map((step) => {
+              return (
+                <Fragment key={step}>
+                  <p>
+                    {step}
+                    <button onClick={(e) => handleDeleteStep(e, step)}>
+                      x
+                    </button>
+                  </p>
+                </Fragment>
+              );
+            })}
+          {errors.steps && <h6 className="error">{errors.steps}</h6>}
+        </div>
+        {/*/////////////////////////////////////////////////////////////////////*/}
+
         <div>
           <label>Image:&#160;</label>
           <input
