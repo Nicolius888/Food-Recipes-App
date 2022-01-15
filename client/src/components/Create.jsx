@@ -32,7 +32,7 @@ export default function Create() {
     dishTypes: [],
     diets: [],
   });
-
+  console.log(input.steps);
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   function handleNameChange(e) {
     console.log(e.target.value);
@@ -223,14 +223,10 @@ export default function Create() {
     e.preventDefault();
     setInput({
       ...input,
-      steps: [
-        input.steps.filter((e) => {
-          e !== step;
-        }),
-      ],
+      steps: input.steps.filter((e) => e !== step),
     });
+    console.log(input.steps);
   }
-  console.log(input.steps);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -329,7 +325,7 @@ export default function Create() {
           <button type="submit" onClick={(e) => handleAddStep(e)}>
             Add
           </button>
-          {input.steps &&
+          {input.steps.length &&
             input.steps.map((step) => {
               return (
                 <Fragment key={step}>
