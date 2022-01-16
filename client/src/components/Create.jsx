@@ -209,16 +209,18 @@ export default function Create() {
 
   function handleAddStep(e) {
     e.preventDefault();
-    if (step === "") return;
+    if (step === "" || input.steps.includes(step)) return;
     setInput({
       ...input,
       steps: [...input.steps, step],
     });
     setStep("");
+    console.log(input.steps);
     validateSteps();
   }
 
   function handleDeleteStep(e, step) {
+    //this step comes from the map of the steps, not the state.
     e.preventDefault();
     setInput({
       ...input,

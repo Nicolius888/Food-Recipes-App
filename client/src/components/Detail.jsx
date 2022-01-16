@@ -38,7 +38,7 @@ export default function Detail() {
           <h3>Healt Score:{healtScore}</h3>
           <h3>Score:{score}</h3>
           <div dangerouslySetInnerHTML={{ __html: resume }} />
-          <p>Steps: {steps}</p>
+          <p>Steps: {steps.map((e) => e)}</p>
         </div>
       ) : (
         <h1>Loading...</h1>
