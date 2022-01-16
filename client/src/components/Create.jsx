@@ -32,7 +32,6 @@ export default function Create() {
     dishTypes: [],
     diets: [],
   });
-  console.log(input.steps);
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   function handleNameChange(e) {
     console.log(e.target.value);
@@ -193,7 +192,7 @@ export default function Create() {
   }
 
   function validateDish() {
-    //this has to be validated outside the mean handle, to read the actual scope of the state...
+    //this has to be validated outside the mean handle, to read the state in the global scope...
     if (input.dishTypes.length === 1) {
       setErrors({
         ...errors,
@@ -216,16 +215,32 @@ export default function Create() {
       steps: [...input.steps, step],
     });
     setStep("");
+    validateSteps();
   }
 
   function handleDeleteStep(e, step) {
-    console.log(step);
     e.preventDefault();
     setInput({
       ...input,
       steps: input.steps.filter((e) => e !== step),
     });
     console.log(input.steps);
+    validateSteps();
+  }
+
+  function validateSteps() {
+    //this has to be validated outside the mean handle, to read the state in the global scope...
+    if (input.steps.length < 2) {
+      setErrors({
+        ...errors,
+        steps: "● Please, describe at least 3 steps to make the recipe ●",
+      });
+    } else {
+      setErrors({
+        ...errors,
+        steps: "",
+      });
+    }
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
