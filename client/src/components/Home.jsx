@@ -18,7 +18,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const recipesState = useSelector((state) => state.recipes);
   const [name, setName] = useState(""); //to use in search bar, and reset when "reaload recipes" is clicked.
-
+  const [loadingOrNull, setLoadingOrNull] = useState("Loading...");
   useEffect(() => {
     dispatch(getRecipes());
   }, [dispatch]);
@@ -42,6 +42,7 @@ export default function Home() {
   async function handleReload(e) {
     e.preventDefault();
     //for "loading..."
+    setLoadingOrNull("Loading...");
     dispatch(deleteRecipes());
     //resets...
     setCurrentPage(1);
@@ -73,6 +74,7 @@ export default function Home() {
     dispatch(invertOrder("asc"));
     setScoreSelectLabel("all");
     dispatch(filterByScore("all"));
+    setLoadingOrNull("Nothing here...");
     //function
     setDietSelectLabel(e.target.value);
     paging(1);
@@ -86,12 +88,16 @@ export default function Home() {
     dispatch(invertOrder("asc"));
     setDietSelectLabel("all");
     dispatch(filterByDiets("all"));
+    setLoadingOrNull("Nothing here...");
     //function
     setScoreSelectLabel(e.target.value);
     paging(1);
     dispatch(filterByScore(e.target.value));
   }
   //idea, creo que si cada filtro se resetea en all antes de cada cambio, podrian ser acumulables...
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   return (
     <div>
       <h1 className={styles.title}>Search Recipes!</h1>
@@ -116,6 +122,7 @@ export default function Home() {
             <option value="all">No filter</option>
             <option value="vegetarian">Vegetarian</option>
             <option value="gluten free">Gluten free</option>
+            <option value="dairy free">Dairy free</option>
             <option value="lacto ovo vegetarian">Lacto ovo vegetarian</option>
             <option value="vegan">Vegan</option>
             <option value="paleolithic">Paleolithic</option>
@@ -167,18 +174,25 @@ export default function Home() {
                     key={recipe.id}
                     name={recipe.name}
                     image={recipe.img}
-                    diets={
-                      recipe.createdInDb
-                        ? recipe.Diets.map((e) => e).map((e) => e.name)
-                        : recipe.Diets
-                    }
+                    diets={recipe.Diets}
                   />
                 </Link>
               </Fragment>
             );
           })
         ) : (
-          <p className={styles.title}>Loading...</p> //solucionar esto convirtiendolo en un estado local que por defecto sea loading pero que las request nulas modifiquien a nothing here apenas y siempre dado el onchange
+          <p className={styles.title}>
+            {loadingOrNull === "Nothing here..." ? (
+              <>
+                {loadingOrNull}{" "}
+                <Link to="/create">
+                  <button>Add a new recipe</button>
+                </Link>
+              </>
+            ) : (
+              loadingOrNull
+            )}
+          </p> //solucionar esto convirtiendolo en un estado local que por defecto sea loading pero que las request nulas modifiquien a nothing here apenas y siempre dado el onchange
         )}
       </div>
       <Paging

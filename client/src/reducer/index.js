@@ -1,17 +1,23 @@
 const initialState = {
   recipes: [],
   recipesCopy: [],
-  types: [],
+  types: [], //?
   detail: [],
 };
 
 function rootReducer(state = initialState, action) {
   switch (action.type) {
     case "GET_RECIPES":
+      let getRecipes = action.payload;
+      getRecipes.map(
+        (e) =>
+          e.createdInDb && (e.Diets = e.Diets.map((e) => e).map((e) => e.name))
+      );
+      console.log(getRecipes);
       return {
         ...state,
-        recipes: action.payload,
-        recipesCopy: action.payload,
+        recipes: getRecipes,
+        recipesCopy: getRecipes,
       };
     case "DELETE_RECIPES":
       return {
@@ -21,19 +27,20 @@ function rootReducer(state = initialState, action) {
       };
     case "INVERT_ORDER":
       const allRecipes3 = state.recipesCopy;
-      const recipesInverted = allRecipes3.reverse();
-      // const recipesInverted = state.recipesCopy.reverse();
-      // const order = action.payload === "asc" ? allRecipes3 : recipesInverted;
+      const order =
+        action.payload === "asc" ? allRecipes3 : allRecipes3.reverse();
       return {
         ...state,
-        recipes: recipesInverted,
+        recipes: order,
       };
     case "FILTER_BY_DIETS":
-      const allRecipes = state.recipesCopy; //filter trough the copy
+      let allRecipes = state.recipesCopy;
       const dietFilter =
         action.payload === "all"
           ? allRecipes
-          : allRecipes.filter((recipe) => recipe.diet.includes(action.payload));
+          : allRecipes.filter((recipe) =>
+              recipe.Diets.includes(action.payload)
+            );
       return {
         ...state,
         recipes: dietFilter,
@@ -51,9 +58,14 @@ function rootReducer(state = initialState, action) {
         recipes: scoreFilter,
       };
     case "SEARCH_BY_NAME":
+      let getName = action.payload;
+      getName.map(
+        (e) =>
+          e.createdInDb && (e.Diets = e.Diets.map((e) => e).map((e) => e.name))
+      );
       return {
         ...state,
-        recipes: action.payload,
+        recipes: getName,
       };
     case "GET_TYPES":
       return {
