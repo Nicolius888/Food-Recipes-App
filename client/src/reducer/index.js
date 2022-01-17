@@ -1,8 +1,9 @@
 const initialState = {
   recipes: [],
   recipesCopy: [],
-  types: [], //?
+  /////////////////////
   detail: [],
+  types: [], //?
 };
 
 function rootReducer(state = initialState, action) {
