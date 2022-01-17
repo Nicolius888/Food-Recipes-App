@@ -1,67 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&family=Montserrat:ital,wght@1,300&family=Playfair+Display:ital,wght@0,400;1,800&display=swap");
 
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 1rem;
-}
-.search {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  height: 30px;
-}
-.title {
-  margin-top: 0.7rem;
-  margin-bottom: 1rem;
+.loading {
+  margin-top: 8rem;
   font-family: "Comfortaa", cursive;
-  font-size: 32px;
-  letter-spacing: -0.6px;
-  word-spacing: 5.2px;
   color: #312f2f;
   font-weight: 700;
   text-decoration: none solid rgb(68, 68, 68);
-  /* font-style: italic; */
   font-variant: small-caps;
 }
 
-.filterBox {
-  font-family: "Comfortaa", cursive;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  height: 30px;
-  margin-top: 1rem;
-  margin-bottom: 1px;
-}
-
-.select {
-  width: 40%;
-  height: 30px;
-  border-radius: 3px;
-  border: 1px solid #000000;
-  font-size: 13px;
-  text-align: center;
-  padding: 3px 2px 5px 2px;
-  text-decoration: none;
-  font-family: "Comfortaa", cursive;
-  font-family: "Montserrat", sans-serif;
-  cursor: pointer;
-}
-
-.divSelect {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  height: 30px;
-  width: 40%;
-  margin-top: 1rem;
-  margin-bottom: 1px;
-}
-
-.buttons {
+.button {
   background: #000000;
   background-image: -webkit-linear-gradient(top, #1a1a1a, #000000);
   background-image: -moz-linear-gradient(top, #1a1a1a, #000000);
@@ -83,7 +32,11 @@
   cursor: pointer;
 }
 
-.buttons:hover {
+.all {
+  display: grid;
+}
+
+.button:hover {
   background: #363636;
   background-image: -webkit-linear-gradient(top, #000000, #363636);
   background-image: -moz-linear-gradient(top, #000000, #363636);
@@ -93,31 +46,80 @@
   text-decoration: none;
 }
 
-.navBar {
-  display: flex;
-  justify-content: space-around;
-  padding-left: 30%;
-}
-.searchInput {
-  margin-left: 3rem;
-}
-
-.loadingOrNull {
-  display: flex;
-  align-items: center;
-  height: 30px;
+.img {
+  width: 250px;
+  height: 150px;
   margin-top: 1rem;
-  margin-bottom: 1px;
+  margin-left: 15%;
+  border-radius: 10px;
+}
 
-  margin-top: 8rem;
+.name {
+  margin-top: 1.5rem;
   margin-bottom: 1rem;
   font-family: "Comfortaa", cursive;
-  font-size: 32px;
+  font-size: 35px;
   letter-spacing: -0.6px;
   word-spacing: 5.2px;
   color: #312f2f;
   font-weight: 700;
-  text-decoration: none solid rgb(68, 68, 68);
-  /* font-style: italic; */
+  text-decoration: none;
   font-variant: small-caps;
+}
+
+.diets {
+  display: flex;
+  justify-content: space-around;
+  padding-inline: 15rem;
+  margin-top: 0;
+  margin-bottom: 0%;
+}
+
+.diet {
+  width: auto;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-family: "Comfortaa", cursive;
+  font-size: 20px;
+  letter-spacing: -0.6px;
+  word-spacing: 5.2px;
+  color: #000000;
+  text-decoration: none;
+  font-variant: small-caps;
+  background-color: #9be74f;
+  border-radius: 10px;
+}
+
+.text {
+  width: fit-content;
+  height: fit-content;
+  margin: 0.5%;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 2px rgb(0 0 0 / 20%);
+  /* cursor: pointer; */
+  text-align: center;
+  /* -webkit-transition-duration: 200ms; */
+  /* transition-duration: 200ms; */
+  align-items: center;
+  justify-content: center;
+}
+
+.data {
+  display: flex;
+  justify-content: space-around;
+  align-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Comfortaa", cursive;
+}
+
+.imgAndData {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }

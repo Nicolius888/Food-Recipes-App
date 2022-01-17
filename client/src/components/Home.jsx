@@ -190,7 +190,7 @@ export default function Home() {
             );
           })
         ) : (
-          <p className={styles.title}>
+          <p className={styles.loadingOrNull}>
             {loadingOrNull === "Nothing here..." ? (
               <>
                 {loadingOrNull}{" "}
