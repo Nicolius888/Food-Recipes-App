@@ -100,12 +100,25 @@ export default function Home() {
 
   return (
     <div>
-      <h1 className={styles.title}>Search Recipes!</h1>
-      <SearchBar name={name} setName={setName} />
+      <h1 className={styles.title}>Search Recipes</h1>
+      <div className={styles.navBar}>
+        <SearchBar
+          className={styles.searchInput}
+          name={name}
+          setName={setName}
+        />
+        <button className={styles.buttons} onClick={(e) => handleReload(e)}>
+          Reload recipes
+        </button>
+        <Link to="/create">
+          <button className={styles.buttons}>Add a new recipe</button>
+        </Link>
+      </div>
       <div className={styles.filterBox}>
-        <div>
+        <div className={styles.divSelect}>
           <label>Alphabetical order:&#160;</label>
           <select
+            className={styles.select}
             value={orderSelectLabel}
             onChange={(e) => handleInvertOrder(e)}
           >
@@ -113,9 +126,10 @@ export default function Home() {
             <option value="desc">Descendent</option>
           </select>
         </div>
-        <div>
+        <div className={styles.divSelect}>
           <label>Filter by diet:&#160;</label>
           <select
+            className={styles.select}
             value={dietSelectLabel}
             onChange={(e) => handleFilterByDiet(e)}
           >
@@ -133,9 +147,10 @@ export default function Home() {
             <option value="whole 30">Whole 30</option>
           </select>
         </div>
-        <div>
+        <div className={styles.divSelect}>
           <label>Filter by score between:&#160;</label>
           <select
+            className={styles.select}
             value={scoreSelectLabel}
             onChange={(e) => handleFilterByScore(e)}
           >
@@ -152,12 +167,6 @@ export default function Home() {
             <option value="10">10</option>
           </select>
         </div>
-
-        <Link to="/create">
-          <button>Add a new recipe</button>
-        </Link>
-
-        <button onClick={(e) => handleReload(e)}>Reload recipes</button>
       </div>
 
       <div className={styles.cards}>
