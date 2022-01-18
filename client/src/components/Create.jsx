@@ -341,8 +341,6 @@ export default function Create() {
             )}
           </div>
           {/*/////////////////////////////////////////////////////////////////////*/}
-          {/*/////////////////////////////////////////////////////////////////////*/}
-
           <div>
             <label>Image:&#160;</label>
             <input
@@ -393,6 +391,7 @@ export default function Create() {
             })}
           {errors.steps && <h6 className="error">{errors.steps}</h6>}
         </div>
+        {/*/////////////////////////////////////////////////////////////////////*/}
         <div>
           <label>Type/s of diet:&#160;</label>
           <label>
@@ -630,6 +629,7 @@ export default function Create() {
           ) : null}
         </div>
       </form>
+      {/*/////////////////////////////////////////////////////////////////////*/}
       <Link to="/home">
         <button className={styles.button}>Back to home</button>
       </Link>

@@ -3,7 +3,7 @@ const initialState = {
   recipesCopy: [],
   /////////////////////
   detail: [],
-  types: [], //?
+  types: [],
 };
 
 function rootReducer(state = initialState, action) {
@@ -14,7 +14,6 @@ function rootReducer(state = initialState, action) {
         (e) =>
           e.createdInDb && (e.Diets = e.Diets.map((e) => e).map((e) => e.name))
       );
-      console.log(getRecipes);
       return {
         ...state,
         recipes: getRecipes,
@@ -28,8 +27,8 @@ function rootReducer(state = initialState, action) {
       };
     case "INVERT_ORDER":
       const allRecipes3 = state.recipesCopy;
-      const order =
-        action.payload === "asc" ? allRecipes3 : allRecipes3.reverse();
+      const allRecipes3Reverse = allRecipes3.reverse();
+      const order = action.payload === "asc" ? allRecipes3 : allRecipes3Reverse;
       return {
         ...state,
         recipes: order,
@@ -48,8 +47,6 @@ function rootReducer(state = initialState, action) {
       };
     case "FILTER_BY_SCORE":
       const allRecipes2 = state.recipesCopy;
-      // const payloadToNum = action.payload.split("-").map(Number);
-      console.log(action.payload);
       const scoreFilter =
         action.payload === "all"
           ? allRecipes2
@@ -87,5 +84,4 @@ function rootReducer(state = initialState, action) {
       return state;
   }
 }
-
 export default rootReducer;

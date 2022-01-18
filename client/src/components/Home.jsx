@@ -56,8 +56,8 @@ export default function Home() {
   //invert order
   const [orderSelectLabel, setOrderSelectLabel] = useState("asc");
   function handleInvertOrder(e) {
-    e.preventDefault();
-    //resets
+    // e.preventDefault();
+    //resets, la idea ahora es lograr evitar los resets
     setScoreSelectLabel("all");
     dispatch(filterByScore("all"));
     setDietSelectLabel("all");
@@ -94,7 +94,6 @@ export default function Home() {
     paging(1);
     dispatch(filterByScore(e.target.value));
   }
-  //idea, creo que si cada filtro se resetea en all antes de cada cambio, podrian ser acumulables...
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -114,6 +113,7 @@ export default function Home() {
           <button className={styles.buttons}>Add a new recipe</button>
         </Link>
       </div>
+
       <div className={styles.filterBox}>
         <div className={styles.divSelect}>
           <label>Alphabetical order:&#160;</label>
@@ -126,6 +126,7 @@ export default function Home() {
             <option value="desc">Descendent</option>
           </select>
         </div>
+
         <div className={styles.divSelect}>
           <label>Filter by diet:&#160;</label>
           <select
@@ -147,6 +148,7 @@ export default function Home() {
             <option value="whole 30">Whole 30</option>
           </select>
         </div>
+
         <div className={styles.divSelect}>
           <label>Filter by score between:&#160;</label>
           <select
@@ -201,9 +203,10 @@ export default function Home() {
             ) : (
               loadingOrNull
             )}
-          </p> //solucionar esto convirtiendolo en un estado local que por defecto sea loading pero que las request nulas modifiquien a nothing here apenas y siempre dado el onchange
+          </p>
         )}
       </div>
+
       <Paging
         recipesPerPage={recipesPerPage}
         recipesState={recipesState.length}
