@@ -266,80 +266,113 @@ export default function Create() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
-    <div>
+    <div className={styles.all}>
       <h1>Add a new recipe</h1>
 
       <form>
-        <div className={styles}>
-          <label>Name:&#160;</label>
-          <input
-            type="text"
-            placeholder="name..."
-            value={input.name}
-            name="name"
-            onChange={(e) => handleNameChange(e)}
-          ></input>
-          {errors.name && <h6 className="error">{errors.name}</h6>}
-        </div>
-        {/*/////////////////////////////////////////////////////////////////////*/}
-        <div>
-          <label>Resume:&#160;</label>
-          <input
-            type="text"
-            placeholder="resume..."
-            value={input.resume}
-            name="resume"
-            onChange={(e) => handleResumeChange(e)}
-          ></input>
-          {errors.resume && <h6 className="error">{errors.resume}</h6>}
-        </div>
-        {/*/////////////////////////////////////////////////////////////////////*/}
-        <div>
-          <label>Score:&#160;</label>
-          <select onChange={(e) => handleScoreChange(e)}>
-            <option value="">--</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-          </select>
-          {errors.score && <h6 className="error">{errors.score}</h6>}
-        </div>
-        {/*/////////////////////////////////////////////////////////////////////*/}
-        <div>
-          <label>Heatly Score:&#160;</label>
-          <select onChange={(e) => handleHealtScoreChange(e)}>
-            <option value="">--</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-          </select>
-          {errors.healtScore && <h6 className="error">{errors.healtScore}</h6>}
+        <div className={styles.inputs}>
+          <div>
+            <label>Name:&#160;</label>
+            <input
+              className={styles.input}
+              type="text"
+              placeholder="name..."
+              value={input.name}
+              name="name"
+              onChange={(e) => handleNameChange(e)}
+            ></input>
+            {errors.name && <h6 className="error">{errors.name}</h6>}
+          </div>
+          {/*/////////////////////////////////////////////////////////////////////*/}
+          <div>
+            <label>Resume:&#160;</label>
+            <input
+              className={styles.input}
+              type="text"
+              placeholder="resume..."
+              value={input.resume}
+              name="resume"
+              onChange={(e) => handleResumeChange(e)}
+            ></input>
+            {errors.resume && <h6 className="error">{errors.resume}</h6>}
+          </div>
+          {/*/////////////////////////////////////////////////////////////////////*/}
+          <div>
+            <label>Score:&#160;</label>
+            <select
+              className={styles.select}
+              onChange={(e) => handleScoreChange(e)}
+            >
+              <option value="">--</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+            {errors.score && <h6 className="error">{errors.score}</h6>}
+          </div>
+          {/*/////////////////////////////////////////////////////////////////////*/}
+          <div>
+            <label>Heatly Score:&#160;</label>
+            <select
+              className={styles.select}
+              onChange={(e) => handleHealtScoreChange(e)}
+            >
+              <option value="">--</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
+            {errors.healtScore && (
+              <h6 className="error">{errors.healtScore}</h6>
+            )}
+          </div>
+          {/*/////////////////////////////////////////////////////////////////////*/}
+          {/*/////////////////////////////////////////////////////////////////////*/}
+
+          <div>
+            <label>Image:&#160;</label>
+            <input
+              className={styles.input}
+              type="text"
+              placeholder="url..."
+              value={input.img}
+              name="img"
+              onChange={(e) => handleImgChange(e)}
+            ></input>
+            {/* <input type="image" id="image" alt="m" src={input.img}></input> */}
+            {errors.img && <h6 className="error">{errors.img}</h6>}
+          </div>
         </div>
         {/*/////////////////////////////////////////////////////////////////////*/}
         <div>
           <label>Steps:&#160;</label>
           <input
+            className={styles.input}
             type="text"
             placeholder="add steps..."
             name="stepAdd"
             value={step}
             onChange={(e) => handleStepInput(e)}
           ></input>
-          <button type="submit" onClick={(e) => handleAddStep(e)}>
+          <button
+            className={styles.button}
+            type="submit"
+            onClick={(e) => handleAddStep(e)}
+          >
             Add
           </button>
           {input.steps.length &&
@@ -348,7 +381,10 @@ export default function Create() {
                 <Fragment key={step}>
                   <p>
                     {step}
-                    <button onClick={(e) => handleDeleteStep(e, step)}>
+                    <button
+                      className={styles.button}
+                      onClick={(e) => handleDeleteStep(e, step)}
+                    >
                       x
                     </button>
                   </p>
@@ -357,21 +393,6 @@ export default function Create() {
             })}
           {errors.steps && <h6 className="error">{errors.steps}</h6>}
         </div>
-        {/*/////////////////////////////////////////////////////////////////////*/}
-
-        <div>
-          <label>Image:&#160;</label>
-          <input
-            type="text"
-            placeholder="url..."
-            value={input.img}
-            name="img"
-            onChange={(e) => handleImgChange(e)}
-          ></input>
-          {/* <input type="image" id="image" alt="m" src={input.img}></input> */}
-          {errors.img && <h6 className="error">{errors.img}</h6>}
-        </div>
-        {/*/////////////////////////////////////////////////////////////////////*/}
         <div>
           <label>Type/s of diet:&#160;</label>
           <label>
@@ -610,9 +631,13 @@ export default function Create() {
         </div>
       </form>
       <Link to="/home">
-        <button>Back to home</button>
+        <button className={styles.button}>Back to home</button>
       </Link>
-      <button type="submit" onClick={(e) => handleSubmit(e)}>
+      <button
+        className={styles.button}
+        type="submit"
+        onClick={(e) => handleSubmit(e)}
+      >
         Submit
       </button>
     </div>

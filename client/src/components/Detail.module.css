@@ -1,6 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&family=Montserrat:ital,wght@1,300&family=Playfair+Display:ital,wght@0,400;1,800&display=swap");
 
+.all {
+  display: grid;
+}
+
 .loading {
   margin-top: 8rem;
   font-family: "Comfortaa", cursive;
@@ -30,10 +34,6 @@
   font-family: "Comfortaa", cursive;
   font-family: "Playfair Display", serif;
   cursor: pointer;
-}
-
-.all {
-  display: grid;
 }
 
 .button:hover {
