@@ -2,8 +2,10 @@ const initialState = {
   recipes: [],
   recipesCopy: [],
   /////////////////////
+  actualOrder: "asc",
+  ////////////////////
+  currentPage: 1,
   detail: [],
-  types: [],
 };
 
 function rootReducer(state = initialState, action) {
@@ -14,6 +16,8 @@ function rootReducer(state = initialState, action) {
         (e) =>
           e.createdInDb && (e.Diets = e.Diets.map((e) => e).map((e) => e.name))
       );
+      //preguntar si tengo algun filtro/estado global para cuado vuelvo del detail o lo que fuere
+      //siguen funcionando filtros aplicados
       return {
         ...state,
         recipes: getRecipes,
@@ -25,13 +29,16 @@ function rootReducer(state = initialState, action) {
         recipes: [],
         recipesCopy: [],
       };
-    case "INVERT_ORDER":
-      const allRecipes3 = state.recipesCopy;
-      const allRecipes3Reverse = allRecipes3.reverse();
-      const order = action.payload === "asc" ? allRecipes3 : allRecipes3Reverse;
+    case "SET_CURRENT_PAGE":
       return {
         ...state,
-        recipes: order,
+        currentPage: action.payload,
+      };
+    case "INVERT_ORDER":
+      return {
+        ...state,
+        recipes: state.recipes.reverse(),
+        actualOrder: action.payload,
       };
     case "FILTER_BY_DIETS":
       let allRecipes = state.recipesCopy;
@@ -41,9 +48,22 @@ function rootReducer(state = initialState, action) {
           : allRecipes.filter((recipe) =>
               recipe.Diets.includes(action.payload)
             );
+      dietFilter.sort(function (a, b) {
+        var nameA = a.name.toUpperCase();
+        var nameB = b.name.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+      });
+      let orderedRecipes =
+        state.actualOrder === "asc" ? dietFilter : dietFilter.reverse();
       return {
         ...state,
-        recipes: dietFilter,
+        recipes: orderedRecipes,
       };
     case "FILTER_BY_SCORE":
       const allRecipes2 = state.recipesCopy;
@@ -51,9 +71,40 @@ function rootReducer(state = initialState, action) {
         action.payload === "all"
           ? allRecipes2
           : allRecipes2.filter((recipe) => recipe.score == action.payload);
+
+      // const mayor =
+      //   action.payload === "mayor" &&
+      //   allRecipes2.sort(function (a, b) {
+      //     var nameA = a.score;
+      //     var nameB = b.score;
+      //     if (nameA < nameB) {
+      //       return -1;
+      //     }
+      //     if (nameA > nameB) {
+      //       return 1;
+      //     }
+      //     return 0;
+      //   });
+
+      // const menor =
+      //   action.payload === "menor" &&
+      //   allRecipes2.sort(function (a, b) {
+      //     var nameA = a.score;
+      //     var nameB = b.score;
+      //     if (nameA < nameB) {
+      //       return 1;
+      //     }
+      //     if (nameA > nameB) {
+      //       return -1;
+      //     }
+      //     return 0;
+      //   });
+
+      let orderedScore =
+        state.actualOrder === "desc" ? scoreFilter.reverse() : scoreFilter;
       return {
         ...state,
-        recipes: scoreFilter,
+        recipes: orderedScore,
       };
     case "SEARCH_BY_NAME":
       let getName = action.payload;
@@ -64,11 +115,6 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         recipes: getName,
-      };
-    case "GET_TYPES":
-      return {
-        ...state,
-        types: action.payload,
       };
     case "GET_DETAIL":
       return {

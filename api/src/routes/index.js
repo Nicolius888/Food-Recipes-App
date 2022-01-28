@@ -29,7 +29,7 @@ const getApiRecipes = async () => {
       name: recipe.title,
       resume: recipe.summary,
       score: recipe.spoonacularScore - 90,
-      healtScore: recipe.healthScore - 90,
+      healtScore: recipe.healthScore,
       steps: recipe.analyzedInstructions
         .map((e) => e.steps.map((el) => el.step))
         .flat(),

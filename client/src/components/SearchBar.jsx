@@ -1,10 +1,15 @@
 import React from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { searchByName } from "../actions";
+import { searchByName, setCurrentPage } from "../actions";
 import styles from "./SearchBar.module.css";
 
-export default function SearchBar({ name, setName }) {
+export default function SearchBar({
+  name,
+  setName,
+  setLoadingOrNull,
+  deleteRecipes,
+}) {
   const dispatch = useDispatch();
 
   function handleChange(e) {
@@ -12,9 +17,13 @@ export default function SearchBar({ name, setName }) {
     setName(e.target.value);
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    dispatch(searchByName(name));
+    dispatch(deleteRecipes());
+    dispatch(setCurrentPage(1));
+    setLoadingOrNull("Loading...");
+    await dispatch(searchByName(name));
+    setLoadingOrNull("Nothing here...");
   }
 
   return (

@@ -37,15 +37,9 @@
   text-decoration: none;
 }
 
-.inputs {
+.steps {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  width: 70%;
-  margin-left: 15%;
-  height: 20rem;
+  position: relative;
 }
 
 .input {
@@ -53,18 +47,4 @@
   height: 23px;
   border-radius: 3px;
   align-items: center;
-}
-
-.select {
-  /* width: 40%;
-    height: 30px; */
-  border-radius: 3px;
-  border: 1px solid #000000;
-  font-size: 13px;
-  text-align: center;
-  padding: 3px 2px 5px 2px;
-  text-decoration: none;
-  font-family: "Comfortaa", cursive;
-  font-family: "Montserrat", sans-serif;
-  cursor: pointer;
 }

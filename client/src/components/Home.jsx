@@ -7,6 +7,8 @@ import {
   deleteRecipes,
   filterByScore,
   invertOrder,
+  setCurrentPage,
+  // filtrarPorMenorOMayor,
 } from "../actions";
 import { Link } from "react-router-dom";
 import styles from "./Home.module.css";
@@ -19,23 +21,20 @@ export default function Home() {
   const recipesState = useSelector((state) => state.recipes);
   const [name, setName] = useState(""); //to use in search bar, and reset when "reaload recipes" is clicked.
   const [loadingOrNull, setLoadingOrNull] = useState("Loading...");
+
   useEffect(() => {
     dispatch(getRecipes());
   }, [dispatch]);
 
   //paging
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPageState = useSelector((state) => state.currentPage);
   const recipesPerPage = 9;
-  const indexOfLastRecipe = currentPage * recipesPerPage;
+  const indexOfLastRecipe = currentPageState * recipesPerPage;
   const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
   const currentRecipes = recipesState.slice(
     indexOfFirstRecipe,
     indexOfLastRecipe
   );
-
-  const paging = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
 
   //filters!
   //reload recipes
@@ -57,41 +56,38 @@ export default function Home() {
   const [orderSelectLabel, setOrderSelectLabel] = useState("asc");
   function handleInvertOrder(e) {
     // e.preventDefault();
-    //resets, la idea ahora es lograr evitar los resets
-    setScoreSelectLabel("all");
-    dispatch(filterByScore("all"));
-    setDietSelectLabel("all");
-    dispatch(filterByDiets("all"));
+
     //function
-    setOrderSelectLabel(e.target.value);
     dispatch(invertOrder(e.target.value));
+    setOrderSelectLabel(e.target.value);
+    // dispatch(invertOrder(e.target.value));
   }
   //diet filter
   const [dietSelectLabel, setDietSelectLabel] = useState("all");
   function handleFilterByDiet(e) {
     //resets
-    setOrderSelectLabel("asc");
-    dispatch(invertOrder("asc"));
+    // setOrderSelectLabel("asc");
+    // dispatch(invertOrder("asc"));
     setScoreSelectLabel("all");
     dispatch(filterByScore("all"));
     setLoadingOrNull("Nothing here...");
     //function
     setDietSelectLabel(e.target.value);
-    paging(1);
+    dispatch(setCurrentPage(1));
     dispatch(filterByDiets(e.target.value));
   }
   //score filter
   const [scoreSelectLabel, setScoreSelectLabel] = useState("all");
   function handleFilterByScore(e) {
     //resets
-    setOrderSelectLabel("asc");
-    dispatch(invertOrder("asc"));
+    // setOrderSelectLabel("asc");
+    // dispatch(invertOrder("asc"));
     setDietSelectLabel("all");
     dispatch(filterByDiets("all"));
     setLoadingOrNull("Nothing here...");
     //function
     setScoreSelectLabel(e.target.value);
-    paging(1);
+    dispatch(setCurrentPage(1));
     dispatch(filterByScore(e.target.value));
   }
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,6 +101,8 @@ export default function Home() {
           className={styles.searchInput}
           name={name}
           setName={setName}
+          setLoadingOrNull={setLoadingOrNull}
+          deleteRecipes={deleteRecipes}
         />
         <button className={styles.buttons} onClick={(e) => handleReload(e)}>
           Reload recipes
@@ -124,6 +122,8 @@ export default function Home() {
           >
             <option value="asc">Ascendent</option>
             <option value="desc">Descendent</option>
+            {/* <option value="menor">Menor</option>
+            <option value="mayor">Mayor</option> */}
           </select>
         </div>
 
@@ -150,23 +150,23 @@ export default function Home() {
         </div>
 
         <div className={styles.divSelect}>
-          <label>Filter by score between:&#160;</label>
+          <label>Filter by score:&#160;</label>
           <select
             className={styles.select}
             value={scoreSelectLabel}
             onChange={(e) => handleFilterByScore(e)}
           >
             <option value="all">No filter</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
+            <option value={1}>1</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+            <option value={4}>4</option>
+            <option value={5}>5</option>
+            <option value={6}>6</option>
+            <option value={7}>7</option>
+            <option value={8}>8</option>
+            <option value={9}>9</option>
+            <option value={10}>10</option>
           </select>
         </div>
       </div>
@@ -206,11 +206,9 @@ export default function Home() {
           </p>
         )}
       </div>
-
       <Paging
         recipesPerPage={recipesPerPage}
         recipesState={recipesState.length}
-        paging={paging}
       />
     </div>
   );

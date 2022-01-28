@@ -1,7 +1,7 @@
 .card {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  width: 180px;
+  width: 225px;
   height: 200px;
   margin: 0.5%;
   background-color: #ffffffa8;
@@ -13,6 +13,7 @@
   transition-duration: 200ms;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 .card:hover {
   transform: translateY(-5px);
@@ -35,8 +36,27 @@
   justify-self: center;
   border-radius: 10px;
 }
-.diet {
+.diets {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.9%;
   font-size: 0.8rem;
   padding-top: 0px;
   margin-top: 0px;
+}
+
+.diet {
+  color: rgb(17, 18, 19);
+  background-color: #f3f2f36c;
+  border-style: double;
+  border-color: #e0d8e0a9;
+  margin-top: 3px;
+  margin-bottom: 0px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  background: #d8ecd1;
+  -webkit-box-shadow: 2px 2px 3px #b8c9b2, -2px -2px 3px #f8fff0;
+  box-shadow: 2px 2px 3px #b8c9b2, -2px -2px 3px #f8fff0;
 }

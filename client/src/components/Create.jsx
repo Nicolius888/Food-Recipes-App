@@ -215,7 +215,6 @@ export default function Create() {
       steps: [...input.steps, step],
     });
     setStep("");
-    console.log(input.steps);
     validateSteps();
   }
 
@@ -226,7 +225,6 @@ export default function Create() {
       ...input,
       steps: input.steps.filter((e) => e !== step),
     });
-    console.log(input.steps);
     validateSteps();
   }
 
@@ -249,19 +247,32 @@ export default function Create() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    dispatch(postRecipe(input));
-    alert("Recipe created!");
-    setInput({
-      name: "",
-      resume: "",
-      score: "",
-      healtScore: "",
-      steps: "",
-      img: "",
-      dishTypes: [],
-      diets: [],
-    });
-    navigate("/home");
+    if (
+      input.name === "" ||
+      input.description === "" ||
+      input.img === "" ||
+      input.score === "" ||
+      input.healtScore === "" ||
+      input.steps.length < 2 ||
+      input.diets.length < 1 ||
+      input.dishTypes.length < 1
+    ) {
+      alert("● Please, fill all the fields ●");
+    } else {
+      dispatch(postRecipe(input));
+      alert("Recipe created!");
+      setInput({
+        name: "",
+        resume: "",
+        score: "",
+        healtScore: "",
+        steps: "",
+        img: "",
+        dishTypes: [],
+        diets: [],
+      });
+      navigate("/home");
+    }
   }
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -270,7 +281,7 @@ export default function Create() {
       <h1>Add a new recipe</h1>
 
       <form>
-        <div className={styles.inputs}>
+        <div>
           <div>
             <label>Name:&#160;</label>
             <input
@@ -278,6 +289,7 @@ export default function Create() {
               type="text"
               placeholder="name..."
               value={input.name}
+              pattern="\[A-Za-z]\"
               name="name"
               onChange={(e) => handleNameChange(e)}
             ></input>
@@ -298,50 +310,6 @@ export default function Create() {
           </div>
           {/*/////////////////////////////////////////////////////////////////////*/}
           <div>
-            <label>Score:&#160;</label>
-            <select
-              className={styles.select}
-              onChange={(e) => handleScoreChange(e)}
-            >
-              <option value="">--</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-            </select>
-            {errors.score && <h6 className="error">{errors.score}</h6>}
-          </div>
-          {/*/////////////////////////////////////////////////////////////////////*/}
-          <div>
-            <label>Heatly Score:&#160;</label>
-            <select
-              className={styles.select}
-              onChange={(e) => handleHealtScoreChange(e)}
-            >
-              <option value="">--</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-            </select>
-            {errors.healtScore && (
-              <h6 className="error">{errors.healtScore}</h6>
-            )}
-          </div>
-          {/*/////////////////////////////////////////////////////////////////////*/}
-          <div>
             <label>Image:&#160;</label>
             <input
               className={styles.input}
@@ -354,6 +322,46 @@ export default function Create() {
             {/* <input type="image" id="image" alt="m" src={input.img}></input> */}
             {errors.img && <h6 className="error">{errors.img}</h6>}
           </div>
+        </div>
+        {/*/////////////////////////////////////////////////////////////////////*/}
+        <div>
+          <label>Score:&#160;</label>
+          <select
+            className={styles.select}
+            onChange={(e) => handleScoreChange(e)}
+          >
+            <option value="">--</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
+          {errors.score && <h6 className="error">{errors.score}</h6>}
+
+          <label>Heatly Score:&#160;</label>
+          <select
+            className={styles.select}
+            onChange={(e) => handleHealtScoreChange(e)}
+          >
+            <option value="">--</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+            <option value="60">60</option>
+            <option value="70">70</option>
+            <option value="80">80</option>
+            <option value="90">90</option>
+            <option value="100">100</option>
+          </select>
+          {errors.healtScore && <h6 className="error">{errors.healtScore}</h6>}
         </div>
         {/*/////////////////////////////////////////////////////////////////////*/}
         <div>
@@ -373,7 +381,7 @@ export default function Create() {
           >
             Add
           </button>
-          {input.steps.length &&
+          {input.steps.length !== 0 && //!==0 no not render de zero "0" if the array is empty
             input.steps.map((step) => {
               return (
                 <Fragment key={step}>

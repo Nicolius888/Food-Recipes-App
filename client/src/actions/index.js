@@ -48,6 +48,10 @@ export function searchByName(payload) {
       });
     } catch (error) {
       console.log("Error searchin by name", error);
+      return dispatch({
+        type: "SEARCH_BY_NAME",
+        payload: [],
+      });
     }
   };
 }
@@ -61,13 +65,10 @@ export function postRecipe(payload) {
   };
 }
 export function getTypes() {
-  return async function (dispatch) {
+  return async function () {
     try {
       const types = await axios.get("http://localhost:3001/types", {});
-      return dispatch({
-        type: "GET_TYPES",
-        payload: types.data,
-      });
+      return console.log(types.data);
     } catch (error) {
       console.log("Error getting types", error);
     }
@@ -91,3 +92,16 @@ export function deleteDetail() {
     type: "DELETE_DETAIL",
   };
 }
+export function setCurrentPage(payload) {
+  return {
+    type: "SET_CURRENT_PAGE",
+    payload,
+  };
+}
+
+// export function filtrarPorMenorOMayor(payload) {
+//   return {
+//     type: "FILTRAR_POR_MENOR_O_MAYOR",
+//     payload,
+//   };
+// }

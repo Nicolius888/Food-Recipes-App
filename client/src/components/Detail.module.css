@@ -77,7 +77,8 @@
 
 .diet {
   width: auto;
-  height: 2rem;
+  height: 1.5rem;
+  text-align: center;
   align-items: center;
   justify-content: center;
   margin-top: 1rem;
@@ -87,10 +88,12 @@
   letter-spacing: -0.6px;
   word-spacing: 5.2px;
   color: #000000;
-  text-decoration: none;
   font-variant: small-caps;
-  background-color: #9be74f;
+  -webkit-border-radius: 10px;
   border-radius: 10px;
+  background: #7ed321;
+  -webkit-box-shadow: 5px 5px 5px #6eb81d, -5px -5px 5px #8eee25;
+  box-shadow: 5px 5px 5px #6eb81d, -5px -5px 5px #8eee25;
 }
 
 .text {

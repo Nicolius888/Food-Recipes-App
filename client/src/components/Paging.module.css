@@ -4,7 +4,7 @@
   align-items: center;
   flex-direction: row;
 }
-.pagingButton {
+.button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,13 +23,22 @@
   cursor: pointer;
   margin: 2px;
 }
-.pagingButton:hover {
+.button:hover {
   background: #75f321;
   color: #fff;
   border-radius: 30px;
   text-shadow: 1px 1px 2px #588842;
   box-shadow: 0 0 20px rgba(26, 31, 6, 0.863);
 }
+
+.activeButton {
+  background: #75f321;
+  color: #fff;
+  border-radius: 30px;
+  text-shadow: 1px 1px 2px #588842;
+  box-shadow: 0 0 20px rgba(26, 31, 6, 0.863);
+}
+
 .liTag {
   display: flex;
   justify-content: center;
