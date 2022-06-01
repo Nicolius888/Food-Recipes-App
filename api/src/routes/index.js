@@ -157,7 +157,7 @@ router.get("/types", async (req, res) => {
 });
 
 //post a recipe
-router.post("/recipes", async (req, res) => {
+router.post("/recipes", async (req, res) => { //follow all this with console.logs and see how to do it cleaner.
   const {
     name,
     resume,
