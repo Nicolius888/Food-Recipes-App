@@ -101,9 +101,13 @@ const getRecipes = async () => {
   let totalGet = apiRecipes.concat(dbFoods);
   return totalGet;
 };
+
+//2. const recipes = await getRecipes(); here, just once.
+
 //ROUTES:                 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+//get all recipes
 router.get("/recipes", async (req, res) => {
-  const recipes = await getRecipes();
+  const recipes = await getRecipes();//2.dont repeat this.
   const { name } = req.query;
   //recipes alphabetically sort by name
   const recipesSort = await recipes.sort(function (a, b) {
@@ -118,6 +122,7 @@ router.get("/recipes", async (req, res) => {
     return 0;
   });
   //if there is a name query, filter and send only that one.
+  //1.this comprobation "there is a name query?" its the first thing to do. fix that. proably just putting this if before the sort.
   if (name) {
     const nameSearch = await recipes.filter((recipe) =>
       recipe.name.toLowerCase().includes(name.toLowerCase())
@@ -132,9 +137,10 @@ router.get("/recipes", async (req, res) => {
   }
 });
 
+//get recipe by id
 router.get("/recipes/:id", async (req, res) => {
   const { id } = req.params;
-  const recipes = await getRecipes();
+  const recipes = await getRecipes(); //2.dont repeat this.
   //here we just filter api recipes + DB created recipes by id
   if (id) {
     let recipeId = await recipes.filter((recipe) => recipe.id == id);
@@ -144,11 +150,13 @@ router.get("/recipes/:id", async (req, res) => {
   }
 });
 
+//get types of diets
 router.get("/types", async (req, res) => {
-  const diets = await getDiets(); //remember that we do the logic up there
+  const diets = await getDiets(); 
   res.status(200).json(diets);
 });
 
+//post a recipe
 router.post("/recipes", async (req, res) => {
   const {
     name,
@@ -180,7 +188,7 @@ router.post("/recipes", async (req, res) => {
 
   dietIds = await Promise.all(dietIds); //resolve it
 
-  dietIds = dietIds.map((diet) => diet.id); //filter the diets by id
+  dietIds = dietIds.map((diet) => diet.id); //filter the diet by id
 
   dietIds.map(async (id) => {
     //set the relationship by id, and add it to the recipe creator
