@@ -18,6 +18,9 @@ router.use(
 //FUNCTIONS/GETS/FILTERS TO USE IN ROUTES:
 
 //get api recipes
+//hacer primero el findAll
+//si no hay nada, hacer el get y devolverlo
+//si hay, devolverlo.
 const getApiRecipes = async () => {
   const recipesGet = await axios.get(
     `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
@@ -30,8 +33,8 @@ const getApiRecipes = async () => {
       score: recipe.spoonacularScore - 90,
       healtScore: recipe.healthScore,
       steps: recipe.analyzedInstructions
-        .map((e) => e.steps.map((el) => el.step))
-        .flat(),
+      .map((e) => e.steps.map((el) => el.step))
+      .flat(),
       img: recipe.image,
       dishTypes: recipe.dishTypes,
       Diets: recipe.diets,
@@ -40,6 +43,36 @@ const getApiRecipes = async () => {
   return recipesFiltered;
 };
 
+//this find created in DB recipes
+const findFoods = async () => {
+  let total = await Recipe.findAll({
+    include: {
+      model: Diet,
+      as: "Diets",
+      attributes: ["name"],
+      through: {
+        attributes: [],
+      },
+    },
+  });
+  return total;
+};
+
+//api recipes + DB created.
+const getRecipes = async () => {
+  const apiRecipes = await getApiRecipes();
+  let dbFoods = await findFoods();
+  let totalGet = apiRecipes.concat(dbFoods);
+  return totalGet;
+};
+
+//To get recipes once from api, and after, always from DB///////////////////////////////////////////////////////////////////////////////
+// const getRecipes = async () => {
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//To get types of diets once from api, and after always from DB///////////////////////////////////////////////////////////////////////////////
 const typesOfDiets = async () => {
   const allTypes = ["vegetarian", "ketogenic"];
   const dbTypesFind = await Diet.findAll();
@@ -81,8 +114,7 @@ const typesOfDiets = async () => {
           } else {
             try{
               console.log("find all result")
-              const dbDiets = await Diet.findAll();
-              const dbDietsFormatted = await dbDiets.map((e) => e.name);//line for equal the format of api types
+              const dbDietsFormatted = await dbTypesFind.map((e) => e.name);//line for equal the format of api types
               return dbDietsFormatted;
             }
             catch(error){
@@ -94,29 +126,8 @@ const typesOfDiets = async () => {
     console.log(err);
   }
 };
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//this find created in DB recipes
-const findFoods = async () => {
-  let total = await Recipe.findAll({
-    include: {
-      model: Diet,
-      as: "Diets",
-      attributes: ["name"],
-      through: {
-        attributes: [],
-      },
-    },
-  });
-  return total;
-};
-//3. need to find the way of making just one call to the api.
-//api recipes + DB created.
-const getRecipes = async () => {
-  const apiRecipes = await getApiRecipes();
-  let dbFoods = await findFoods();
-  let totalGet = apiRecipes.concat(dbFoods);
-  return totalGet;
-};
 
 
 
