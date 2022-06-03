@@ -5,8 +5,7 @@ require("dotenv").config(); // dotenv package
 const { API_KEY } = process.env; // and, the .env file
 const { Recipe, Diet } = require("../db");
 
-// Importar todos los routers;
-// Ejemplo: const authRouter = require('./auth.js');
+
 
 const router = Router();
 
@@ -41,43 +40,107 @@ const getApiRecipes = async () => {
   return recipesFiltered;
 };
 
-//only api diets
-const getDiets = async () => {
-  //all api data
-  const dietsGet = await axios.get(
-    `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
-  );
-  //this returns a "big" object with "little" objects each one with the array of diets of each recipe
-  const dietsFiltered = await dietsGet.data.results.map((types) => {
-    return {
-      type: types.diets.map((e) => e),
-    };
-  });
+const typesOfDiets = async () => {
+  const allTypes = ["vegetarian", "ketogenic"];
+  const dbTypesFind = await Diet.findAll();
+  console.log("dbTypesFind", dbTypesFind);
+  try{
+   if (dbTypesFind.length == 0){
+     
+    try{
+       const getAndFilter = await axios.get(
+         `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
+         );
 
-  //this is where we will push each type of diet only if it doesn's includes it
-  const allTypes = ["vegetarian", "ketogenic"]; //this two arent included in the api, we included it manually, so the user can create using it.
+       const dietsFiltered = await getAndFilter.data.results.map((recipe) =>recipe.diets.map((e) => e));
+           //this returns a "big" object with "little" objects each one with the array of diets of each recipe
+           dietsFiltered.forEach((e) => {
+             //for heach "little" object in the "big" one
+             e.forEach((e) => {
+               // and for each type of diet in the "little" object
+               if (!allTypes.includes(e)) {
+                 //if it not exists in my allTypes array
+                 allTypes.push(e); //push it.
+                }
+                //and voilá we have all the diets, not repeated.
+              });
+            }); 
+            //this create the diets in the DB   
+            const create = async () => {
+              allTypes.forEach((name) => {
+                Diet.findOrCreate({ where: { name: name } }); //this has to be findOrCreate to do the create just ONCE.
+              });
+              return allTypes;
+            };
+            console.log("create result")
+            return create();
+            //if end, but if allTypes has length +2, we just need to findAll and return next in the else.
+          }
+          catch(error){
+            console.log(error);
+          }
 
-  dietsFiltered.forEach((e) => {
-    //for heach "little" object in the "big" one
-    e.type.forEach((e) => {
-      // and for each type of diet in the "little" object
-      if (!allTypes.includes(e)) {
-        //if it not exists in my allTypes array
-        allTypes.push(e); //push it.
+          } else {
+
+            try{
+              console.log("find all result")
+              return Diet.findAll();
+            }
+            catch(error){
+              console.log(error);
+            }
+    
       }
-      //and voilá we have all the diets, not repeated.
-    });
-  });
-  //this create the diets in the DB
-  const create = async () => {
-    allTypes.forEach((name) => {
-      Diet.findOrCreate({ where: { name: name } }); //this has to be findOrCreate to do the create just ONCE.
-    });
-    return allTypes;
-  };
-  //all this is to be used in /types route
-  return create();
+  }
+  catch(err){
+    console.log(err);
+  }
+
 };
+ //ad try catch
+    
+
+
+
+
+
+//only api diets
+// const getDiets = async () => {
+//   //all api data
+//   const dietsGet = await axios.get(
+//     `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
+//   );
+//   const dietsFiltered = await dietsGet.data.results.map((types) => {
+//     return {
+//       type: types.diets.map((e) => e),
+//       //this returns a "big" object with "little" objects each one with the array of diets of each recipe
+//     };
+//   });
+
+//   //this is where we will push each type of diet only if it doesn's includes it
+//   const allTypes = ["vegetarian", "ketogenic"]; //this two arent included in the api, we included it manually, so the user can create using it.
+
+//   dietsFiltered.forEach((e) => {
+//     //for heach "little" object in the "big" one
+//     e.type.forEach((e) => {
+//       // and for each type of diet in the "little" object
+//       if (!allTypes.includes(e)) {
+//         //if it not exists in my allTypes array
+//         allTypes.push(e); //push it.
+//       }
+//       //and voilá we have all the diets, not repeated.
+//     });
+//   });
+//   //this create the diets in the DB
+//   const create = async () => {
+//     allTypes.forEach((name) => {
+//       Diet.findOrCreate({ where: { name: name } }); //this has to be findOrCreate to do the create just ONCE.
+//     });
+//     return allTypes;
+//   };
+//   //all this is to be used in /types route
+//   return create();
+// };
 
 //this find created in DB recipes
 const findFoods = async () => {
@@ -93,7 +156,7 @@ const findFoods = async () => {
   });
   return total;
 };
-
+//3. need to find the way of making just one call to the api.
 //api recipes + DB created.
 const getRecipes = async () => {
   const apiRecipes = await getApiRecipes();
@@ -102,13 +165,14 @@ const getRecipes = async () => {
   return totalGet;
 };
 
-//2. const recipes = await getRecipes(); here, just once.
+
+
 
 //ROUTES:                 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //get all recipes
 router.get("/recipes", async (req, res) => {
-  const recipes = await getRecipes();//2.dont repeat this.
-  const { name } = req.query;
+  const recipes = await getRecipes();
+  const {name} = req.query;
   //recipes alphabetically sort by name
   const recipesSort = await recipes.sort(function (a, b) {
     var nameA = a.name.toUpperCase();
@@ -121,12 +185,11 @@ router.get("/recipes", async (req, res) => {
     }
     return 0;
   });
+
   //if there is a name query, filter and send only that one.
-  //1.this comprobation "there is a name query?" its the first thing to do. fix that. proably just putting this if before the sort.
+
   if (name) {
-    const nameSearch = await recipes.filter((recipe) =>
-      recipe.name.toLowerCase().includes(name.toLowerCase())
-    );
+    const nameSearch = await recipes.filter((recipe) =>{recipe.name.toLowerCase().includes(name.toLowerCase())} );//maybe is recipe.title now
     if (nameSearch.length) {
       res.status(200).send(nameSearch);
     } else {
@@ -134,13 +197,14 @@ router.get("/recipes", async (req, res) => {
     }
   } else {
     res.status(200).send(recipesSort);
-  }
-});
+}
+}
+);
 
 //get recipe by id
 router.get("/recipes/:id", async (req, res) => {
   const { id } = req.params;
-  const recipes = await getRecipes(); //2.dont repeat this.
+  const recipes = await getRecipes(); 
   //here we just filter api recipes + DB created recipes by id
   if (id) {
     let recipeId = await recipes.filter((recipe) => recipe.id == id);
@@ -149,12 +213,23 @@ router.get("/recipes/:id", async (req, res) => {
       : res.status(400).send("id not found (◡‿◡*)");
   }
 });
-
+//Desastre tota. ahre, ver como hacer el find all a la base de datos para hacer solo UN llamado a la api, 
+//para mejorar el workflow o va a ser imposible trabajar comodamente.
 //get types of diets
 router.get("/types", async (req, res) => {
-  const diets = await getDiets(); 
-  res.status(200).json(diets);
+  // const diets = await getDiets(); 
+  try{
+    const diets = await typesOfDiets();
+    res.status(200).send(diets);
+  }
+  catch(error){
+    console.log(error);
+    res.status(400).send(error);
+  }
 });
+
+
+
 
 //post a recipe
 router.post("/recipes", async (req, res) => { //follow all this with console.logs and see how to do it cleaner.
