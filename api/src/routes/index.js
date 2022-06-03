@@ -43,19 +43,18 @@ const getApiRecipes = async () => {
 const typesOfDiets = async () => {
   const allTypes = ["vegetarian", "ketogenic"];
   const dbTypesFind = await Diet.findAll();
-  console.log("dbTypesFind", dbTypesFind);
+
   try{
    if (dbTypesFind.length == 0){
-     
     try{
        const getAndFilter = await axios.get(
          `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
          );
 
        const dietsFiltered = await getAndFilter.data.results.map((recipe) =>recipe.diets.map((e) => e));
-           //this returns a "big" object with "little" objects each one with the array of diets of each recipe
+           //this returns a "big" array with "little" arrays each one with the array of diets of each recipe
            dietsFiltered.forEach((e) => {
-             //for heach "little" object in the "big" one
+             //for heach "little" array in the "big" one
              e.forEach((e) => {
                // and for each type of diet in the "little" object
                if (!allTypes.includes(e)) {
@@ -65,10 +64,11 @@ const typesOfDiets = async () => {
                 //and voilá we have all the diets, not repeated.
               });
             }); 
-            //this create the diets in the DB   
+
+            //this create the diets in the DB, using allTypes array.   
             const create = async () => {
               allTypes.forEach((name) => {
-                Diet.findOrCreate({ where: { name: name } }); //this has to be findOrCreate to do the create just ONCE.
+                Diet.findOrCreate({ where: { name: name } });
               });
               return allTypes;
             };
@@ -79,9 +79,7 @@ const typesOfDiets = async () => {
           catch(error){
             console.log(error);
           }
-
           } else {
-
             try{
               console.log("find all result")
               return Diet.findAll();
@@ -89,21 +87,15 @@ const typesOfDiets = async () => {
             catch(error){
               console.log(error);
             }
-    
       }
   }
   catch(err){
     console.log(err);
   }
-
 };
- //ad try catch
+
     
-
-
-
-
-
+//The old types function///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //only api diets
 // const getDiets = async () => {
 //   //all api data
@@ -141,6 +133,7 @@ const typesOfDiets = async () => {
 //   //all this is to be used in /types route
 //   return create();
 // };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //this find created in DB recipes
 const findFoods = async () => {
