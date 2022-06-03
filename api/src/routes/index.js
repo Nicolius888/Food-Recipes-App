@@ -82,7 +82,9 @@ const typesOfDiets = async () => {
           } else {
             try{
               console.log("find all result")
-              return Diet.findAll();
+              const dbDiets = await Diet.findAll();
+              const dbDietsFormatted = await dbDiets.map((e) => e.name);
+              return dbDietsFormatted;
             }
             catch(error){
               console.log(error);
