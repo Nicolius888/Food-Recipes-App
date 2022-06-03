@@ -19,7 +19,7 @@ router.use(
 
 //get api recipes
 //hacer primero el findAll
-//si no hay nada, hacer el get y devolverlo
+//si no hay nada, hacer el get, crear en la db y devolver
 //si hay, devolverlo.
 const getApiRecipes = async () => {
   const recipesGet = await axios.get(
@@ -65,9 +65,47 @@ const getRecipes = async () => {
   let totalGet = apiRecipes.concat(dbFoods);
   return totalGet;
 };
-
+///UNDER CONSTRUCTION
 //To get recipes once from api, and after, always from DB///////////////////////////////////////////////////////////////////////////////
-// const getRecipes = async () => {
+// const getRecipesOnce = async () => {
+//  const dbRecipes = await Recipe.findAll();
+ 
+//  try{
+//    if (dbRecipes.length == 0){ //if there's no recipes in DB
+//     //api get
+//     const apiRecipesGet = await axios.get(
+//       `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
+//     );
+    
+//     //for filter
+//     const recipesFiltered = await apiRecipesGet.data.results.map((recipe) => {
+//       return {
+//         id: recipe.id,
+//         name: recipe.title,
+//         resume: recipe.summary,
+//         score: recipe.spoonacularScore - 90,
+//         healtScore: recipe.healthScore,
+//         steps: recipe.analyzedInstructions
+//         .map((e) => e.steps.map((el) => el.step))
+//         .flat(),
+//         img: recipe.image,
+//         dishTypes: recipe.dishTypes,
+//         Diets: recipe.diets,
+//       };
+//     });
+  
+   ///add the sort here
+   //see how to bulk create
+   //https://stackoverflow.com/questions/56907853/how-to-bulk-create-in-sequelize
+   //see how to manage the realtionships
+   //here we have the diets, but not the relatoinships.
+//    }
+//  } 
+//  catch(error){
+//    console.log(error);
+//  }
+
+// }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -138,7 +176,7 @@ router.get("/recipes", async (req, res) => {
   const recipes = await getRecipes();
   const {name} = req.query;
   //recipes alphabetically sort by name
-  const recipesSort = await recipes.sort(function (a, b) {
+  const recipesSort = await recipes.sort(function (a, b) {//but why you do this just here?
     var nameA = a.name.toUpperCase();
     var nameB = b.name.toUpperCase();
     if (nameA < nameB) {
@@ -153,8 +191,8 @@ router.get("/recipes", async (req, res) => {
   //if there is a name query, filter and send only that one.
 
   if (name) {
-    const nameSearch = await recipes.filter((recipe) =>{recipe.name.toLowerCase().includes(name.toLowerCase())} );//maybe is recipe.title now
-    if (nameSearch.length) {
+    const nameSearch = await recipesSort.filter((e) => e.name.toLowerCase().includes(name.toLowerCase()));
+    if (nameSearch.length>0) {
       res.status(200).send(nameSearch);
     } else {
       res.status(404).send("Recipe not found, try again (◡‿◡*)");
