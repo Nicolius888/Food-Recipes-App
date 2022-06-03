@@ -64,7 +64,6 @@ const typesOfDiets = async () => {
                 //and voilá we have all the diets, not repeated.
               });
             }); 
-
             //this create the diets in the DB, using allTypes array.   
             const create = async () => {
               allTypes.forEach((name) => {
@@ -74,7 +73,7 @@ const typesOfDiets = async () => {
             };
             console.log("create result")
             return create();
-            //if end, but if allTypes has length +2, we just need to findAll and return next in the else.
+            //if true end here, but if allTypes has length +2, we just need to findAll and return next in the else.
           }
           catch(error){
             console.log(error);
@@ -83,7 +82,7 @@ const typesOfDiets = async () => {
             try{
               console.log("find all result")
               const dbDiets = await Diet.findAll();
-              const dbDietsFormatted = await dbDiets.map((e) => e.name);
+              const dbDietsFormatted = await dbDiets.map((e) => e.name);//line for equal the format of api types
               return dbDietsFormatted;
             }
             catch(error){
@@ -95,47 +94,6 @@ const typesOfDiets = async () => {
     console.log(err);
   }
 };
-
-    
-//The old types function///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//only api diets
-// const getDiets = async () => {
-//   //all api data
-//   const dietsGet = await axios.get(
-//     `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
-//   );
-//   const dietsFiltered = await dietsGet.data.results.map((types) => {
-//     return {
-//       type: types.diets.map((e) => e),
-//       //this returns a "big" object with "little" objects each one with the array of diets of each recipe
-//     };
-//   });
-
-//   //this is where we will push each type of diet only if it doesn's includes it
-//   const allTypes = ["vegetarian", "ketogenic"]; //this two arent included in the api, we included it manually, so the user can create using it.
-
-//   dietsFiltered.forEach((e) => {
-//     //for heach "little" object in the "big" one
-//     e.type.forEach((e) => {
-//       // and for each type of diet in the "little" object
-//       if (!allTypes.includes(e)) {
-//         //if it not exists in my allTypes array
-//         allTypes.push(e); //push it.
-//       }
-//       //and voilá we have all the diets, not repeated.
-//     });
-//   });
-//   //this create the diets in the DB
-//   const create = async () => {
-//     allTypes.forEach((name) => {
-//       Diet.findOrCreate({ where: { name: name } }); //this has to be findOrCreate to do the create just ONCE.
-//     });
-//     return allTypes;
-//   };
-//   //all this is to be used in /types route
-//   return create();
-// };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //this find created in DB recipes
 const findFoods = async () => {
