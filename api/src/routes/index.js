@@ -17,10 +17,6 @@ router.use(
 
 //FUNCTIONS/GETS/FILTERS TO USE IN ROUTES:
 
-//get api recipes
-//hacer primero el findAll
-//si no hay nada, hacer el get, crear en la db y devolver
-//si hay, devolverlo.
 const getApiRecipes = async () => {
   const recipesGet = await axios.get(
     `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
@@ -65,47 +61,79 @@ const getRecipes = async () => {
   let totalGet = apiRecipes.concat(dbFoods);
   return totalGet;
 };
-///UNDER CONSTRUCTION
+
+
+
+//get api recipes---------------
+//hacer primero el findAll
+//si no hay nada, hacer el get,sort, crear en la db y devolver
+//si hay, devolverlo.
+
+//UNDER CONSTRUCTION
 //To get recipes once from api, and after, always from DB///////////////////////////////////////////////////////////////////////////////
-// const getRecipesOnce = async () => {
-//  const dbRecipes = await Recipe.findAll();
- 
-//  try{
-//    if (dbRecipes.length == 0){ //if there's no recipes in DB
-//     //api get
-//     const apiRecipesGet = await axios.get(
-//       `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
-//     );
-    
-//     //for filter
-//     const recipesFiltered = await apiRecipesGet.data.results.map((recipe) => {
-//       return {
-//         id: recipe.id,
-//         name: recipe.title,
-//         resume: recipe.summary,
-//         score: recipe.spoonacularScore - 90,
-//         healtScore: recipe.healthScore,
-//         steps: recipe.analyzedInstructions
-//         .map((e) => e.steps.map((el) => el.step))
-//         .flat(),
-//         img: recipe.image,
-//         dishTypes: recipe.dishTypes,
-//         Diets: recipe.diets,
-//       };
-//     });
+const getRecipesOnce = async () => {
+   
+  const dbRecipes = await Recipe.findAll();
   
-   ///add the sort here
+ try{
+   if (dbRecipes.length == 0){ //if there's no recipes in DB
+//     //api get
+    const apiRecipesGet = await axios.get(
+      `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
+    );
+    
+//     //filter to match our db model
+    const recipesFiltered = await apiRecipesGet.data.results.map((recipe) => {
+      return {
+        id: recipe.id,
+        name: recipe.title,
+        resume: recipe.summary,
+        score: recipe.spoonacularScore - 90,
+        healtScore: recipe.healthScore,
+        steps: recipe.analyzedInstructions
+        .map((e) => e.steps.map((el) => el.step))
+        .flat(),
+       img: recipe.image,
+        dishTypes: recipe.dishTypes,
+        Diets: recipe.diets,
+      };
+    });
+  
+   //alfabetically sort
+    const recipesSort = await recipesFiltered.sort((a, b) => {
+      var nameA = a.name.toLowerCase();
+      var nameB = b.name.toLowerCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+
+//recipesSort for Each one create solution or bulk create
+//https://stackoverflow.com/questions/63922261/sequelize-bulk-insert-with-associations
+
+
+
+
    //see how to bulk create
    //https://stackoverflow.com/questions/56907853/how-to-bulk-create-in-sequelize
-   //see how to manage the realtionships
-   //here we have the diets, but not the relatoinships.
-//    }
-//  } 
-//  catch(error){
-//    console.log(error);
-//  }
+   //see how to manage the realtionships(as in create route i say...)
 
-// }
+   } else {
+     try{}
+      catch(error){
+        console.log(error)
+      }
+   }
+ } 
+ catch(error){
+   console.log(error);
+ }
+
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -144,7 +172,7 @@ const typesOfDiets = async () => {
             };
             console.log("create result")
             return create();
-            //if true end here, but if allTypes has length +2, we just need to findAll and return next in the else.
+            //if true, end here, but if allTypes has length +2, else starts and we need to findAll and return it.
           }
           catch(error){
             console.log(error);
