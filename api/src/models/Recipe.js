@@ -34,10 +34,10 @@ module.exports = (sequelize) => {
     dishTypes: {
       type: DataTypes.ARRAY(DataTypes.STRING),
     },
-    createdInDb: {
+    createdByUser: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true,
+      defaultValue: false,
     },
   });
 };
