@@ -16,51 +16,51 @@ router.use(
 );
 
 //FUNCTIONS/GETS/FILTERS TO USE IN ROUTES:
+//OLD GET ALL RECIPES CONTORLLER
+// const getApiRecipes = async () => {
+//   const recipesGet = await axios.get(
+//     `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
+//   );
+//   const recipesFiltered = await recipesGet.data.results.map((recipe) => {
+//     return {
+//       id: recipe.id,
+//       name: recipe.title,
+//       resume: recipe.summary,
+//       score: recipe.spoonacularScore - 90,
+//       healtScore: recipe.healthScore,
+//       steps: recipe.analyzedInstructions
+//       .map((e) => e.steps.map((el) => el.step))
+//       .flat(),
+//       img: recipe.image,
+//       dishTypes: recipe.dishTypes,
+//       Diets: recipe.diets,
+//     };
+//   });
+//   return recipesFiltered;
+// };
 
-const getApiRecipes = async () => {
-  const recipesGet = await axios.get(
-    `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
-  );
-  const recipesFiltered = await recipesGet.data.results.map((recipe) => {
-    return {
-      id: recipe.id,
-      name: recipe.title,
-      resume: recipe.summary,
-      score: recipe.spoonacularScore - 90,
-      healtScore: recipe.healthScore,
-      steps: recipe.analyzedInstructions
-      .map((e) => e.steps.map((el) => el.step))
-      .flat(),
-      img: recipe.image,
-      dishTypes: recipe.dishTypes,
-      Diets: recipe.diets,
-    };
-  });
-  return recipesFiltered;
-};
+// //this find created in DB recipes
+// const findFoods = async () => {
+//   let total = await Recipe.findAll({
+//     include: {
+//       model: Diet,
+//       as: "Diets",
+//       attributes: ["name"],
+//       through: {
+//         attributes: [],
+//       },
+//     },
+//   });
+//   return total;
+// };
 
-//this find created in DB recipes
-const findFoods = async () => {
-  let total = await Recipe.findAll({
-    include: {
-      model: Diet,
-      as: "Diets",
-      attributes: ["name"],
-      through: {
-        attributes: [],
-      },
-    },
-  });
-  return total;
-};
-
-//api recipes + DB created.
-const getRecipes = async () => {
-  const apiRecipes = await getApiRecipes();
-  let dbFoods = await findFoods();
-  let totalGet = apiRecipes.concat(dbFoods);
-  return totalGet;
-};
+// //api recipes + DB created.
+// const getRecipes = async () => {
+//   const apiRecipes = await getApiRecipes();
+//   let dbFoods = await findFoods();
+//   let totalGet = apiRecipes.concat(dbFoods);
+//   return totalGet;
+// };
 
 
 
@@ -73,11 +73,14 @@ const getRecipes = async () => {
 //To get recipes once from api, and after, always from DB///////////////////////////////////////////////////////////////////////////////
 const getRecipesOnce = async () => {
    
-  const dbRecipes = await Recipe.findAll();
+  const dbRecipes = await Recipe.findAll({
+    include: { model: Diet, as: "Diets" },
+  });
   
  try{
    if (dbRecipes.length == 0){ //if there's no recipes in DB
-//     //api get
+   console.log("no recipes in database, entering if...");
+     //api get
     const apiRecipesGet = await axios.get(
       `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
     );
@@ -112,18 +115,36 @@ const getRecipesOnce = async () => {
       return 0;
     });
 
-//recipesSort for Each one create solution or bulk create
-//https://stackoverflow.com/questions/63922261/sequelize-bulk-insert-with-associations
+   //trying to create in the DB by looping
 
-
-
-
-   //see how to bulk create
-   //https://stackoverflow.com/questions/56907853/how-to-bulk-create-in-sequelize
-   //see how to manage the realtionships(as in create route i say...)
-
+   const dbCreate = await recipesSort.forEach((e) => {
+     let create = await Recipe.create({
+        name: e.name,
+        resume: e.resume,
+        score: e.score,
+        healtScore: e.healtScore,
+        steps: e.steps,
+        img: e.img,
+        dishTypes: e.dishTypes,
+      });
+      
+      //find the diets IDś in the DB, recipe by recipe, to make relation
+      let dietsIds = e.Diets.map((el) => {await Diet.findOne({ where: { name: dietName } }) //find diets by name, one by one, with map
+      })
+      dietsIds = await Promise.all(dietsIds);//to resolve, but its still necesary?
+      dietsIds = dietsIds.map((diet) => diet.id);
+      dietsIds.map(async (id) => {
+        //set the relationship by id, and add it to the recipe creator
+        await create.addDiets(id);
+      });
+   })
+   return dbCreate();
+   //but , if there are recipes in DB, just return them.
    } else {
-     try{}
+     console.log("there are recipes in database, entering else...");
+     try{
+        return dbRecipes;
+     }
       catch(error){
         console.log(error)
       }
@@ -271,7 +292,7 @@ router.post("/recipes", async (req, res) => { //follow all this with console.log
     steps,
     img,
     dishTypes,
-    createdInDb,
+    createdByUser,
     diets,
   } = req.body; //diets is an array with strings of types of diets
 
@@ -284,7 +305,7 @@ router.post("/recipes", async (req, res) => { //follow all this with console.log
     steps,
     img,
     dishTypes,
-    createdInDb,
+    createdByUser,
   });
 
   let dietIds = diets.map(
