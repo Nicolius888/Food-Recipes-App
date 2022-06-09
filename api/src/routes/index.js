@@ -117,8 +117,8 @@ const getRecipesOnce = async () => {
 
    //trying to create in the DB by looping
 
-   const dbCreate = await recipesSort.forEach((e) => {
-     let create = await Recipe.create({
+   const dbCreate = await recipesSort.map(async (e) => {
+     let create = async (e) => await Recipe.create({
         name: e.name,
         resume: e.resume,
         score: e.score,
@@ -127,18 +127,28 @@ const getRecipesOnce = async () => {
         img: e.img,
         dishTypes: e.dishTypes,
       });
-      
+    
       //find the diets IDś in the DB, recipe by recipe, to make relation
-      let dietsIds = e.Diets.map((el) => {await Diet.findOne({ where: { name: dietName } }) //find diets by name, one by one, with map
-      })
-      dietsIds = await Promise.all(dietsIds);//to resolve, but its still necesary?
-      dietsIds = dietsIds.map((diet) => diet.id);
-      dietsIds.map(async (id) => {
-        //set the relationship by id, and add it to the recipe creator
-        await create.addDiets(id);
+      let dietsIds = e.Diets.map((el) => Diet.findOne({ where: { name: el } })) 
+      dietsIds = await Promise.all(dietsIds);//to resolve
+      dietsIds = dietsIds.map((diet) =>{
+       return diet.id;
       });
-   })
-   return dbCreate();
+      async() => await create.addDiets(dietsIds);
+      // dietsIds.map(async (id) => {
+      //     //set the relationship by id, and add it to the recipe creator
+      //     await create.addDiets(id);
+      //   });
+
+      })
+    //  dbCreate();
+
+      // const dbRecipesUpdt = await Recipe.findAll({
+      //   include: { model: Diet, as: "Diets" },
+      // });
+      // console.log(dbRecipesUpdt);
+
+    return dbCreate;
    //but , if there are recipes in DB, just return them.
    } else {
      console.log("there are recipes in database, entering else...");
@@ -222,32 +232,32 @@ const typesOfDiets = async () => {
 //ROUTES:                 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //get all recipes
 router.get("/recipes", async (req, res) => {
-  const recipes = await getRecipes();
+  const recipes = await getRecipesOnce();
   const {name} = req.query;
   //recipes alphabetically sort by name
-  const recipesSort = await recipes.sort(function (a, b) {//but why you do this just here?
-    var nameA = a.name.toUpperCase();
-    var nameB = b.name.toUpperCase();
-    if (nameA < nameB) {
-      return -1;
-    }
-    if (nameA > nameB) {
-      return 1;
-    }
-    return 0;
-  });
+  // const recipesSort = await recipes.sort(function (a, b) {//but why you do this just here?
+  //   var nameA = a.name.toUpperCase();
+  //   var nameB = b.name.toUpperCase();
+  //   if (nameA < nameB) {
+  //     return -1;
+  //   }
+  //   if (nameA > nameB) {
+  //     return 1;
+  //   }
+  //   return 0;
+  // });
 
   //if there is a name query, filter and send only that one.
 
   if (name) {
-    const nameSearch = await recipesSort.filter((e) => e.name.toLowerCase().includes(name.toLowerCase()));
+    const nameSearch = await recipes.filter((e) => e.name.toLowerCase().includes(name.toLowerCase()));
     if (nameSearch.length>0) {
       res.status(200).send(nameSearch);
     } else {
       res.status(404).send("Recipe not found, try again (◡‿◡*)");
     }
   } else {
-    res.status(200).send(recipesSort);
+    res.status(200).send(recipes);
 }
 }
 );
