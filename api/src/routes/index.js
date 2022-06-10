@@ -27,7 +27,14 @@ router.use(
 const getRecipesOnce = async () => {
    
   const dbRecipes = await Recipe.findAll({
-    include: { model: Diet, as: "Diets" },
+    include: {
+      model: Diet,
+      as: "Diets",
+      attributes: ["name"],
+      through: {
+        attributes: [],
+      },
+    },
     order: [
       ['name', 'ASC'],
   ],
@@ -59,8 +66,7 @@ const getRecipesOnce = async () => {
     
     //create in the DB by mapping        
     let dbCreate =  recipesFiltered.map(async (e) => {
-    //  let create = async (e) =>
-      await Recipe.create({
+     let create = await Recipe.create({
         name: e.name,
         resume: e.resume,
         healthScore: e.healthScore,
@@ -70,21 +76,29 @@ const getRecipesOnce = async () => {
       });
       
       //find the diets IDś in the DB, recipe by recipe, to make relation
-      // let dietsIds = e.Diets.map((el) => Diet.findOne({ where: { name: el } })) 
-      // dietsIds = await Promise.all(dietsIds);//to resolve
-      // dietsIds = dietsIds.map((diet) =>{
-        //   return diet.id;
-        // });
-        // async() => await create.addDiets(dietsIds);
-        // dietsIds.map(async (id) => {
+      let dietsIds = e.Diets.map((el) => Diet.findOne({ where: { name: el } })) 
+      dietsIds = await Promise.all(dietsIds);//to resolve
+      dietsIds = dietsIds.map((diet) =>{     //to filter by id
+          return diet.id;
+      });
+      // await e.name.addDiets(dietsIds);//to add relation, MAYBE E.NAME.ADDDIETS(DIETSIDS)
+        dietsIds.map(async (id) => {
           //     //set the relationship by id, and add it to the recipe creator
-          //     await create.addDiets(id);
-          //   }); //en este caso falta agregar el promise all
+              await create.addDiet(id);
+            }); //en este caso falta agregar el promise all
           
-        })
+   })
    dbCreate =  await Promise.all(dbCreate);
+  
    let find = await Recipe.findAll({
-    include: { model: Diet, as: "Diets" },
+    include: {
+      model: Diet,
+      as: "Diets",
+      attributes: ["name"],
+      through: {
+        attributes: [],
+      },
+    },
     order: [
       ['name', 'ASC'],
   ],
