@@ -48,7 +48,7 @@ const getRecipesOnce = async () => {
       `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
     );
 
-    //     //filter to match our db model
+     //filter to match our db model
     const recipesFiltered = await apiRecipesGet.data.results.map((recipe) => {
       return {
         id: recipe.id,
@@ -81,11 +81,10 @@ const getRecipesOnce = async () => {
       dietsIds = dietsIds.map((diet) =>{     //to filter by id
           return diet.id;
       });
-      // await e.name.addDiets(dietsIds);//to add relation, MAYBE E.NAME.ADDDIETS(DIETSIDS)
-        dietsIds.map(async (id) => {
-          //     //set the relationship by id, and add it to the recipe creator
+      dietsIds.map(async (id) => {
+      //set the relationship by id, and add it to the recipe creator
               await create.addDiet(id);
-            }); //en este caso falta agregar el promise all
+      });
           
    })
    dbCreate =  await Promise.all(dbCreate);
