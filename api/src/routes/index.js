@@ -77,22 +77,21 @@ const getRecipesOnce = async () => {
     include: { model: Diet, as: "Diets" },
   });
   
- try{
-   if (dbRecipes.length == 0){ //if there's no recipes in DB
+  try{
+  if (dbRecipes.length == 0){ //if there's no recipes in DB
    console.log("no recipes in database, entering if...");
      //api get
     const apiRecipesGet = await axios.get(
       `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
     );
-    
-//     //filter to match our db model
+
+    //     //filter to match our db model
     const recipesFiltered = await apiRecipesGet.data.results.map((recipe) => {
       return {
         id: recipe.id,
         name: recipe.title,
         resume: recipe.summary,
-        score: recipe.spoonacularScore - 90,
-        healtScore: recipe.healthScore,
+        healthScore: recipe.healthScore,
         steps: recipe.analyzedInstructions
         .map((e) => e.steps.map((el) => el.step))
         .flat(),
@@ -102,53 +101,51 @@ const getRecipesOnce = async () => {
       };
     });
   
-   //alfabetically sort
-    const recipesSort = await recipesFiltered.sort((a, b) => {
-      var nameA = a.name.toLowerCase();
-      var nameB = b.name.toLowerCase();
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      return 0;
-    });
 
-   //trying to create in the DB by looping
+   //create in the DB by looping
 
-   const dbCreate = await recipesSort.map(async (e) => {
-     let create = async (e) => await Recipe.create({
+   let dbCreate =  recipesFiltered.map(async (e) => {
+    //  let create = async (e) =>
+      await Recipe.create({
         name: e.name,
         resume: e.resume,
-        score: e.score,
-        healtScore: e.healtScore,
+        healthScore: e.healthScore,
         steps: e.steps,
         img: e.img,
         dishTypes: e.dishTypes,
       });
-    
+      
       //find the diets IDś in the DB, recipe by recipe, to make relation
-      let dietsIds = e.Diets.map((el) => Diet.findOne({ where: { name: el } })) 
-      dietsIds = await Promise.all(dietsIds);//to resolve
-      dietsIds = dietsIds.map((diet) =>{
-       return diet.id;
-      });
-      async() => await create.addDiets(dietsIds);
-      // dietsIds.map(async (id) => {
-      //     //set the relationship by id, and add it to the recipe creator
-      //     await create.addDiets(id);
-      //   });
-
-      })
-    //  dbCreate();
-
-      // const dbRecipesUpdt = await Recipe.findAll({
-      //   include: { model: Diet, as: "Diets" },
-      // });
-      // console.log(dbRecipesUpdt);
-
-    return dbCreate;
+      // let dietsIds = e.Diets.map((el) => Diet.findOne({ where: { name: el } })) 
+      // dietsIds = await Promise.all(dietsIds);//to resolve
+      // dietsIds = dietsIds.map((diet) =>{
+        //   return diet.id;
+        // });
+        // async() => await create.addDiets(dietsIds);
+        // dietsIds.map(async (id) => {
+          //     //set the relationship by id, and add it to the recipe creator
+          //     await create.addDiets(id);
+          //   }); //en este caso falta agregar el promise all
+          
+        })
+   dbCreate =  await Promise.all(dbCreate);
+   let find = await Recipe.findAll({
+    include: { model: Diet, as: "Diets" },
+  });//then add diet model   
+  //     //alfabetically sort
+  //  const recipesSort = await find.sort((a, b) => {
+  //       var nameA = a.name.toLowerCase();
+  //       var nameB = b.name.toLowerCase();
+  //       if (nameA < nameB) {
+  //         return -1;
+  //       }
+  //       if (nameA > nameB) {
+  //         return 1;
+  //       }
+  //       return 0;
+  //     });
+        
+    return find;
    //but , if there are recipes in DB, just return them.
    } else {
      console.log("there are recipes in database, entering else...");
