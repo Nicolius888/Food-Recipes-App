@@ -15,17 +15,11 @@ router.use(
   })
 );
 
-//FUNCTIONS/GETS/FILTERS TO USE IN ROUTES:
+//CONTROLLERS AND ROUTERS TO USE IN ROUTES:
 
-//get api recipes---------------
-//hacer primero el findAll
-//si no hay nada, hacer el get,sort, crear en la db y devolver
-//si hay, devolverlo.
-
-//UNDER CONSTRUCTION
 //To get recipes once from api, and after, always from DB///////////////////////////////////////////////////////////////////////////////
 const getRecipesOnce = async () => {
-   
+  await typesOfDiets();
   const dbRecipes = await Recipe.findAll({
     include: {
       model: Diet,
@@ -42,7 +36,7 @@ const getRecipesOnce = async () => {
   
   try{
   if (dbRecipes.length == 0){ //if there's no recipes in DB
-   console.log("no recipes in database, entering if...");
+   console.log("creating recipes in database...");
      //api get
     const apiRecipesGet = await axios.get(
       `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
@@ -103,10 +97,9 @@ const getRecipesOnce = async () => {
   ],
   });
         
-    return find;
-   //but , if there are recipes in DB, just return them.
-   } else {
-     console.log("there are recipes in database, entering else...");
+    return find;//this if-return still returns the diet-include empty, since there are already in the db.
+  } else {
+     console.log("requesting recipes from database...");
      try{
         return dbRecipes;
      }
@@ -156,7 +149,7 @@ const typesOfDiets = async () => {
               });
               return allTypes;
             };
-            console.log("create result")
+            console.log("creating types of diets in database...");
             return create();
             //if true, end here, but if allTypes has length +2, else starts and we need to findAll and return it.
           }
@@ -165,7 +158,7 @@ const typesOfDiets = async () => {
           }
           } else {
             try{
-              console.log("find all result")
+              console.log("requesting types of diets from database");
               const dbDietsFormatted = await dbTypesFind.map((e) => e.name);//line for equal the format of api types
               return dbDietsFormatted;
             }
@@ -189,19 +182,6 @@ const typesOfDiets = async () => {
 router.get("/recipes", async (req, res) => {
   const recipes = await getRecipesOnce();
   const {name} = req.query;
-  //recipes alphabetically sort by name
-  // const recipesSort = await recipes.sort(function (a, b) {//but why you do this just here?
-  //   var nameA = a.name.toUpperCase();
-  //   var nameB = b.name.toUpperCase();
-  //   if (nameA < nameB) {
-  //     return -1;
-  //   }
-  //   if (nameA > nameB) {
-  //     return 1;
-  //   }
-  //   return 0;
-  // });
-
   //if there is a name query, filter and send only that one.
 
   if (name) {
