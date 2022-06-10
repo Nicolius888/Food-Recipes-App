@@ -200,7 +200,7 @@ router.get("/recipes", async (req, res) => {
 //get recipe by id
 router.get("/recipes/:id", async (req, res) => {
   const { id } = req.params;
-  const recipes = await getRecipes(); 
+  const recipes = await getRecipesOnce();
   //here we just filter api recipes + DB created recipes by id
   if (id) {
     let recipeId = await recipes.filter((recipe) => recipe.id == id);
@@ -212,8 +212,7 @@ router.get("/recipes/:id", async (req, res) => {
 //Desastre tota. ahre, ver como hacer el find all a la base de datos para hacer solo UN llamado a la api, 
 //para mejorar el workflow o va a ser imposible trabajar comodamente.
 //get types of diets
-router.get("/types", async (req, res) => {
-  // const diets = await getDiets(); 
+router.get("/types", async (res) => {
   try{
     const diets = await typesOfDiets();
     res.status(200).send(diets);
@@ -228,7 +227,7 @@ router.get("/types", async (req, res) => {
 
 
 //post a recipe
-router.post("/recipes", async (req, res) => { //follow all this with console.logs and see how to do it cleaner.
+router.post("/recipes", async (req, res) => {
   const {
     name,
     resume,
@@ -262,7 +261,7 @@ router.post("/recipes", async (req, res) => { //follow all this with console.log
   dietIds = dietIds.map((diet) => diet.id); //filter the diet by id
 
   dietIds.map(async (id) => {
-    //set the relationship by id, and add it to the recipe creator
+    //set the relationship by id, in the recipe creator
     await create.addDiets(id);
   });
   res.status(201).json(create); //return the "201 created", and the recipe created.
