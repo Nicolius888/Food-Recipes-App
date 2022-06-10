@@ -281,5 +281,49 @@ router.delete("/recipes/:id", async (req, res) => {
 }
 );
 
+//update a recipe by id
+router.put("/recipes/:id", async (req, res) => {
+  const { 
+    name,
+    resume,
+    healthScore,
+    steps,
+    img,
+    dishTypes,
+    createdByUser,
+    diets,
+  } = req.body;
+  const {id} = req.params;
+  const recipe = await Recipe.findByPk(id);
+  if (recipe) {
+    await recipe.update({
+      name,
+      resume,
+      healthScore,
+      steps,
+      img,
+      dishTypes,
+      createdByUser,
+    });
+
+    let dietIds = diets.map(
+      async (dietName) => await Diet.findOne({ where: { name: dietName } }) //find diets by name, one by one, with map
+    );
+    dietIds = await Promise.all(dietIds); //resolve it
+    dietIds = dietIds.map((diet) => diet.id); //filter the diet by id
+    dietIds.map(async (id) => {
+      //set for update the relationship by id, in the recipe creator
+      await recipe.setDiets(id);
+    }
+    );
+
+    res.status(200).send(`Recipe ${recipe.name} updated`);
+  } else {
+    res.status(400).send("Recipe not found");
+  }
+}
+);
+
+
 
 module.exports = router;
