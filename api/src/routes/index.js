@@ -197,7 +197,7 @@ router.get("/recipes", async (req, res) => {
 }
 );
 
-//get recipe by id
+//get recipe by id                                                  //for future reference: this also can be done with findByPk()
 router.get("/recipes/:id", async (req, res) => {
   const { id } = req.params;
   const recipes = await getRecipesOnce();
@@ -209,8 +209,7 @@ router.get("/recipes/:id", async (req, res) => {
       : res.status(400).send("id not found (◡‿◡*)");
   }
 });
-//Desastre tota. ahre, ver como hacer el find all a la base de datos para hacer solo UN llamado a la api, 
-//para mejorar el workflow o va a ser imposible trabajar comodamente.
+
 //get types of diets
 router.get("/types", async (res) => {
   try{
@@ -268,5 +267,19 @@ router.post("/recipes", async (req, res) => {
 //NOTES: in ths post recipes as in the get all recipes, i still dont know why we cant get the diets in the moment of creation. 
 //when we require then from the DB, in get all or by name or id, we get it normally. this is just a backend problem.
 //the front end doesn't get affected by this.
+
+//delete a recipe by id
+router.delete("/recipes/:id", async (req, res) => {
+  const { id } = req.params;
+  const recipe = await Recipe.findByPk(id);
+  if (recipe) {
+    await recipe.destroy();
+    res.status(200).send(`Recipe ${recipe.name} deleted`);
+  } else {
+    res.status(400).send("Recipe not found");
+  }
+}
+);
+
 
 module.exports = router;
