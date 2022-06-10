@@ -231,21 +231,19 @@ router.post("/recipes", async (req, res) => {
   const {
     name,
     resume,
-    score,
-    healtScore,
+    healthScore,
     steps,
     img,
     dishTypes,
     createdByUser,
-    diets,
-  } = req.body; //diets is an array with strings of types of diets
+    diets,//diets is an array with strings of types(names) of diets
+  } = req.body; 
 
   const create = await Recipe.create({
     //create the recipe in the DB
     name,
     resume,
-    score,
-    healtScore,
+    healthScore,
     steps,
     img,
     dishTypes,
@@ -266,5 +264,9 @@ router.post("/recipes", async (req, res) => {
   });
   res.status(201).json(create); //return the "201 created", and the recipe created.
 });
+
+//NOTES: in ths post recipes as in the get all recipes, i still dont know why we cant get the diets in the moment of creation. 
+//when we require then from the DB, in get all or by name or id, we get it normally. this is just a backend problem.
+//the front end doesn't get affected by this.
 
 module.exports = router;
