@@ -16,53 +16,6 @@ router.use(
 );
 
 //FUNCTIONS/GETS/FILTERS TO USE IN ROUTES:
-//OLD GET ALL RECIPES CONTORLLER
-// const getApiRecipes = async () => {
-//   const recipesGet = await axios.get(
-//     `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`
-//   );
-//   const recipesFiltered = await recipesGet.data.results.map((recipe) => {
-//     return {
-//       id: recipe.id,
-//       name: recipe.title,
-//       resume: recipe.summary,
-//       score: recipe.spoonacularScore - 90,
-//       healtScore: recipe.healthScore,
-//       steps: recipe.analyzedInstructions
-//       .map((e) => e.steps.map((el) => el.step))
-//       .flat(),
-//       img: recipe.image,
-//       dishTypes: recipe.dishTypes,
-//       Diets: recipe.diets,
-//     };
-//   });
-//   return recipesFiltered;
-// };
-
-// //this find created in DB recipes
-// const findFoods = async () => {
-//   let total = await Recipe.findAll({
-//     include: {
-//       model: Diet,
-//       as: "Diets",
-//       attributes: ["name"],
-//       through: {
-//         attributes: [],
-//       },
-//     },
-//   });
-//   return total;
-// };
-
-// //api recipes + DB created.
-// const getRecipes = async () => {
-//   const apiRecipes = await getApiRecipes();
-//   let dbFoods = await findFoods();
-//   let totalGet = apiRecipes.concat(dbFoods);
-//   return totalGet;
-// };
-
-
 
 //get api recipes---------------
 //hacer primero el findAll
@@ -75,6 +28,9 @@ const getRecipesOnce = async () => {
    
   const dbRecipes = await Recipe.findAll({
     include: { model: Diet, as: "Diets" },
+    order: [
+      ['name', 'ASC'],
+  ],
   });
   
   try{
@@ -95,16 +51,14 @@ const getRecipesOnce = async () => {
         steps: recipe.analyzedInstructions
         .map((e) => e.steps.map((el) => el.step))
         .flat(),
-       img: recipe.image,
+        img: recipe.image,
         dishTypes: recipe.dishTypes,
         Diets: recipe.diets,
       };
     });
-  
-
-   //create in the DB by looping
-
-   let dbCreate =  recipesFiltered.map(async (e) => {
+    
+    //create in the DB by mapping        
+    let dbCreate =  recipesFiltered.map(async (e) => {
     //  let create = async (e) =>
       await Recipe.create({
         name: e.name,
@@ -131,19 +85,10 @@ const getRecipesOnce = async () => {
    dbCreate =  await Promise.all(dbCreate);
    let find = await Recipe.findAll({
     include: { model: Diet, as: "Diets" },
-  });//then add diet model   
-  //     //alfabetically sort
-  //  const recipesSort = await find.sort((a, b) => {
-  //       var nameA = a.name.toLowerCase();
-  //       var nameB = b.name.toLowerCase();
-  //       if (nameA < nameB) {
-  //         return -1;
-  //       }
-  //       if (nameA > nameB) {
-  //         return 1;
-  //       }
-  //       return 0;
-  //     });
+    order: [
+      ['name', 'ASC'],
+  ],
+  });
         
     return find;
    //but , if there are recipes in DB, just return them.
