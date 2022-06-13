@@ -15,7 +15,7 @@ router.use(
   })
 );
 
-//CONTROLLERS AND ROUTERS TO USE IN ROUTES:
+//CONTROLLERS TO USE IN ROUTES:
 
 //To get recipes once from api, and after, always from DB///////////////////////////////////////////////////////////////////////////////
 const getRecipesOnce = async () => {
@@ -151,8 +151,8 @@ const typesOfDiets = async () => {
             };
             console.log("creating types of diets in database...");
             return create();
-            //if true, end here, but if allTypes has length +2, else starts and we need to findAll and return it.
-          }
+            //if true, create in db and return, but if false (allTypes has length +2), else starts, and we need to findAll in db and return it.
+          }//so we create ni db( just once) or we search in db =)
           catch(error){
             console.log(error);
           }
@@ -182,8 +182,8 @@ const typesOfDiets = async () => {
 router.get("/recipes", async (req, res) => {
   const recipes = await getRecipesOnce();
   const {name} = req.query;
+  
   //if there is a name query, filter and send only that one.
-
   if (name) {
     const nameSearch = await recipes.filter((e) => e.name.toLowerCase().includes(name.toLowerCase()));
     if (nameSearch.length>0) {
@@ -265,7 +265,7 @@ router.post("/recipes", async (req, res) => {
 });
 
 //NOTES: in ths post recipes as in the get all recipes, i still dont know why we cant get the diets in the moment of creation. 
-//when we require then from the DB, in get all or by name or id, we get it normally. this is just a backend problem.
+//when we require then from the DB, in -get all- or by name or id, we get it normally. this is just a backend problem.
 //the front end doesn't get affected by this.
 
 //delete a recipe by id
