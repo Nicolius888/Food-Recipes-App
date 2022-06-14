@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export function getRecipes() {
+export function getRecipes() {  //get all recipes from backend
   return async function (dispatch) {
     try {
       const recipes = await axios.get("http://localhost:3001/recipes");
@@ -13,12 +13,12 @@ export function getRecipes() {
     }
   };
 }
-export function deleteRecipes() {
+export function deleteRecipes() {  //delete all recipes from global state
   return {
     type: "DELETE_RECIPES",
   };
 }
-export function filterByDiets(payload) {
+export function filterByDiets(payload) {  //filters in the global state
   return {
     type: "FILTER_BY_DIETS",
     payload,
@@ -36,7 +36,7 @@ export function invertOrder(payload) {
     payload,
   };
 }
-export function searchByName(payload) {
+export function searchByName(payload) {  //search in the backend
   return async function (dispatch) {
     try {
       const json = await axios.get(
@@ -55,7 +55,7 @@ export function searchByName(payload) {
     }
   };
 }
-export function postRecipe(payload) {
+export function postRecipe(payload) {   //post a new recipe in the database
   return async function () {
     const postRecipe = await axios.post(
       "http://localhost:3001/recipes",
@@ -64,7 +64,7 @@ export function postRecipe(payload) {
     return postRecipe;
   };
 }
-export function getTypes() {
+export function getTypes() {            //get diet types from database
   return async function () {
     try {
       const types = await axios.get("http://localhost:3001/types", {});
@@ -74,7 +74,7 @@ export function getTypes() {
     }
   };
 }
-export function getDetail(id) {
+export function getDetail(id) {        //get a recipe by id from the backend
   return async function (dispatch) {
     try {
       const detail = await axios.get(`http://localhost:3001/recipes/${id}`);
@@ -87,12 +87,12 @@ export function getDetail(id) {
     }
   };
 }
-export function deleteDetail() {
+export function deleteDetail() {    //to use recipe detail in the global state
   return {
     type: "DELETE_DETAIL",
   };
 }
-export function setCurrentPage(payload) {
+export function setCurrentPage(payload) {  //to pagination
   return {
     type: "SET_CURRENT_PAGE",
     payload,
@@ -105,3 +105,6 @@ export function setCurrentPage(payload) {
 //     payload,
 //   };
 // }
+
+//add action to delete a recipe by id
+//add action to update a recipe by id
