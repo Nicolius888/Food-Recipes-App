@@ -36,7 +36,9 @@ module.exports = (sequelize) => {
       allowNull: false,
       defaultValue: false,
     },
-  });
+  },{
+    timestamps: false
+  }
+  );
 };
 
-//RE-VER: hay un datatype para recibir arrays y aclarar lo que viene adentro, ver en el grupo o reguntar
