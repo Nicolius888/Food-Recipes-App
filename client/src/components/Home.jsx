@@ -50,7 +50,7 @@ export default function Home() {
     setScoreSelectLabel("all");
     setOrderSelectLabel("asc");
     //our function
-    await dispatch(getRecipes());
+    await dispatch(getRecipes());//see that warning
   }
   //invert order
   const [orderSelectLabel, setOrderSelectLabel] = useState("asc");
@@ -123,7 +123,7 @@ export default function Home() {
             <option value="asc">Ascendent</option>
             <option value="desc">Descendent</option>
             {/* <option value="menor">Menor</option>
-            <option value="mayor">Mayor</option> */}
+            <option value="mayor">Mayor</option> SEE THAT FILTER HENRY ASKED FOR */ }
           </select>
         </div>
 
@@ -192,14 +192,14 @@ export default function Home() {
             );
           })
         ) : (
-          <p className={styles.loadingOrNull}>
+          <p key={currentRecipes.length} className={styles.loadingOrNull}>
             {loadingOrNull === "Nothing here..." ? (
-              <>
-                {loadingOrNull}{" "}
+              <Fragment key={currentRecipes.length} >
+                {/* {loadingOrNull}{" "} */}
                 <Link to="/create">
                   <button>Add a new recipe</button>
                 </Link>
-              </>
+              </Fragment>
             ) : (
               loadingOrNull
             )}

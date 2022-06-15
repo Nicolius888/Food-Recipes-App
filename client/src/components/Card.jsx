@@ -7,11 +7,11 @@ export default function Card({ id, name, image, diets }) {
     <div id={id} className={styles.card}>
       <img className={styles.img} src={image} alt="img not found" />
       <h3 className={styles.name}>{name}</h3>
-      <p className={styles.diets}>
+      <h6 className={styles.diets}>
         {diets.map((e) => (
           <p className={styles.diet}>{e}</p>
         ))}
-      </p>
+      </h6>
     </div>
   );
 }

@@ -4,6 +4,7 @@ const cors = require("cors");
 require("dotenv").config(); // dotenv package
 const { API_KEY } = process.env; // and, the .env file
 const { Recipe, Diet } = require("../db");
+const { json } = require("body-parser");
 
 
 
@@ -20,7 +21,7 @@ router.use(
 //To get recipes once from api, and after, always from DB///////////////////////////////////////////////////////////////////////////////
 const getRecipesOnce = async () => {
   await typesOfDiets();
-  const dbRecipes = await Recipe.findAll({
+  let dbRecipes = await Recipe.findAll({
     include: {
       model: Diet,
       as: "Diets",
@@ -31,8 +32,9 @@ const getRecipesOnce = async () => {
     },
     order: [
       ['name', 'ASC'],
-  ],
+    ],
   });
+  
   
   try{
   if (dbRecipes.length == 0){ //if there's no recipes in DB
@@ -80,28 +82,28 @@ const getRecipesOnce = async () => {
               await create.addDiet(id);
       });
           
-   })
-   dbCreate =  await Promise.all(dbCreate);
-  
-   let find = await Recipe.findAll({
-    include: {
-      model: Diet,
-      as: "Diets",
-      attributes: ["name"],
-      through: {
-        attributes: [],
+    })
+    dbCreate =  await Promise.all(dbCreate);
+    
+    let find = await Recipe.findAll({
+      include: {
+        model: Diet,
+        as: "Diets",
+        attributes: ["name"],
+        through: {
+          attributes: [],
+        },
       },
-    },
-    order: [
-      ['name', 'ASC'],
-  ],
-  });
+      order: [
+        ['name', 'ASC'],
+      ],
+  });//try to arrange this part to avoid formating each time in the front end...//IMPORTANT//DO FIRST//ON THIS RIGHT NOW
         
     return find;//this if-return still returns the diet-include empty, since there are already in the db.
   } else {
      console.log("requesting recipes from database...");
      try{
-        return dbRecipes;
+       return dbRecipes;
      }
       catch(error){
         console.log(error)
@@ -180,10 +182,9 @@ const typesOfDiets = async () => {
 //ROUTES:                 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //get all recipes
 router.get("/recipes", async (req, res) => {
-  const recipes = await getRecipesOnce();
-  const {name} = req.query;
-  
+  let recipes = await getRecipesOnce();  
   //if there is a name query, filter and send only that one.
+  const {name} = req.query;
   if (name) {
     const nameSearch = await recipes.filter((e) => e.name.toLowerCase().includes(name.toLowerCase()));
     if (nameSearch.length>0) {

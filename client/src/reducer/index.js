@@ -14,7 +14,7 @@ function rootReducer(state = initialState, action) {
       let getRecipes = action.payload;
       getRecipes.map(
         (e) =>
-          e.createdInDb && (e.Diets = e.Diets.map((e) => e).map((e) => e.name))// this is to adapt the format of the created by user diets
+          e.Diets = e.Diets.map((e) => e.name)// this is to adapt the format of the created by user diets
       );
       //preguntar si tengo algun filtro/estado global para cuado vuelvo del detail o lo que fuere
       //siguen funcionando filtros aplicados
