@@ -8,9 +8,9 @@ export default function Create() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    dispatch(getTypes());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getTypes());
+  // }, [dispatch]);
 
   const [errors, setErrors] = useState({
     name: "",
