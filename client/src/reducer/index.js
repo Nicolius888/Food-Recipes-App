@@ -109,8 +109,7 @@ function rootReducer(state = initialState, action) {
     case "SEARCH_BY_NAME":
       let getName = action.payload;
       getName.map(
-        (e) =>
-          e.createdInDb && (e.Diets = e.Diets.map((e) => e).map((e) => e.name))//looks good, try to fix this in backend please.
+        (e) =>(e.Diets = e.Diets.map((e) => e.name))
       );
       return {
         ...state,

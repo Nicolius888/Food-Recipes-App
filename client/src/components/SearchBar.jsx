@@ -12,9 +12,14 @@ export default function SearchBar({
 }) {
   const dispatch = useDispatch();
 
-  function handleChange(e) {
+ async function handleChange(e) {
     e.preventDefault();
-    setName(e.target.value);
+    setName(e.target.value);//this now doesnt depends on the API!! we can search on change and nos just on submit
+    console.log(name)
+    setLoadingOrNull("Loading...");
+    await dispatch(searchByName(name));
+    setLoadingOrNull("Nothing here...");
+
   }
 
   async function handleSubmit(e) {
@@ -32,7 +37,7 @@ export default function SearchBar({
         className={styles.searchInput}
         type="text"
         placeholder="Search..."
-        onChange={(e) => handleChange(e)}
+        onChange={(e) => handleChange(e)}//this now doesnt depends on the API!! we can search on change and nos just on submit
         value={name}
       />
       <button

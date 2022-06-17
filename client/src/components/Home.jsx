@@ -1,21 +1,25 @@
+//React
 import React, { Fragment } from "react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+//Actions
 import {
   getRecipes,
   filterByDiets,
-  deleteRecipes,
-  filterByScore,
-  invertOrder,
+  deleteRecipes,//aca se puede usar el nuevo metodo en el back, pero solo permitiendo borrar las createdByUser:true
+  filterByScore,//cambiar a health score
+  invertOrder,//chequear como esta funcando
   setCurrentPage,
-  // filtrarPorMenorOMayor,
+  // filtrarPorMenorOMayor,//chequear
 } from "../actions";
-import { Link } from "react-router-dom";
+//Modules-Components
 import styles from "./Home.module.css";
 import Card from "./Card";
 import Paging from "./Paging";
 import SearchBar from "./SearchBar";
 
+//Default function render
 export default function Home() {
   const dispatch = useDispatch();
   const recipesState = useSelector((state) => state.recipes);
@@ -195,7 +199,7 @@ export default function Home() {
           <p key={currentRecipes.length} className={styles.loadingOrNull}>
             {loadingOrNull === "Nothing here..." ? (
               <Fragment key={currentRecipes.length} >
-                {/* {loadingOrNull}{" "} */}
+                {loadingOrNull}
                 <Link to="/create">
                   <button>Add a new recipe</button>
                 </Link>

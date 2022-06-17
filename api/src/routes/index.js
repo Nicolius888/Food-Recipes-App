@@ -212,15 +212,11 @@ router.get("/recipes/:id", async (req, res) => {
 });
 
 //get types of diets
-router.get("/types", async (res) => {
-  try{
+router.get("/types", async (req, res) => {
     const diets = await typesOfDiets();
-    res.status(200).send(diets);
-  }
-  catch(error){
-    console.log(error);
-    res.status(400).send(error);
-  }
+    diets.length
+    ? res.status(200).send(diets)
+    : res.status(400).send("Error requesting typesof diets to the database (◡‿◡*)");
 });
 
 

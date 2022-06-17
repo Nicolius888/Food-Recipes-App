@@ -47,7 +47,7 @@ export function searchByName(payload) {  //search in the backend
         payload: json.data,
       });
     } catch (error) {
-      console.log("Error searchin by name", error);
+      console.log("Error searching by name", error);
       return dispatch({
         type: "SEARCH_BY_NAME",
         payload: [],
