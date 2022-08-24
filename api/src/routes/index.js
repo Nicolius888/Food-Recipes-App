@@ -1,8 +1,8 @@
 const { Router } = require("express");
 const axios = require("axios");
 const cors = require("cors");
-require("dotenv").config(); // dotenv package
-const { API_KEY } = process.env; // and, the .env file
+require("dotenv").config(); // dotenv package for get the .env file data
+const { API_KEY } = process.env; 
 const { Recipe, Diet } = require("../db");
 const { json } = require("body-parser");
 
@@ -10,7 +10,7 @@ const { json } = require("body-parser");
 
 const router = Router();
 
-router.use(
+router.use( //for the frontend calls
   cors({
     origin: "http://localhost:3000",
   })
@@ -18,7 +18,7 @@ router.use(
 
 //CONTROLLERS TO USE IN ROUTES:
 
-//To get recipes once from api, and after, always from DB///////////////////////////////////////////////////////////////////////////////
+//To get recipes once from api, and after that, always from DB///////////////////////////////////////////////////////////////////////////////
 const getRecipesOnce = async () => {
   await typesOfDiets();
   let dbRecipes = await Recipe.findAll({
