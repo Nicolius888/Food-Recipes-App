@@ -17,10 +17,10 @@ export default function Detail() {
     img,
     resume,
     dishTypes,
-    healtScore,
-    score,
+    healthScore,
+    // score,
     steps,
-    createdInDb,
+    createdByUser,
   } = detailState;
 
   useEffect(() => {
@@ -31,20 +31,16 @@ export default function Detail() {
   function handleClick() {
     dispatch(setCurrentPage(currentPageState));
   }
-
+//comentar TODO e ir tratando de debuggear x ahi 
   return (
     <div>
       {detailState.id ? (
         <div className={styles.all} key={id}>
-          <h1 className={styles.name}>{name}</h1>
+          <h1 className={styles.name} >{name}</h1>
 
           <h2 className={styles.diets}>
-            {createdInDb
-              ? Diets.map((e) => e).map((e) => {
-                  return <p className={styles.diet}>&#160;{e.name}&#160;</p>;
-                })
-              : Diets.map((e) => {
-                  return <p className={styles.diet}>&#160;{e}&#160;</p>;
+            {Diets.map((e) => e).map((e, i=0) => {
+                  return <p key={name+i++} className={styles.diet}>&#160;{e.name}&#160;</p>;
                 })}
           </h2>
           {/*/////////////////////////////////////////////////////////////////////*/}
@@ -53,16 +49,15 @@ export default function Detail() {
             <h3 className={styles.data}>
               Dish Types:&#160;{dishTypes.map((e) => e + " ")}
             </h3>
-            <h3 className={styles.data}>Score:&#160;{score}</h3>
-            <h3 className={styles.data}>Healt Score:&#160;{healtScore}</h3>
-          </div>
+            <h3 className={styles.data}>Health Score:&#160;{healthScore}</h3>
+          </div> 
           {/*/////////////////////////////////////////////////////////////////////*/}
           <div
             className={styles.text}
             dangerouslySetInnerHTML={{ __html: resume }}
           />
           {steps.length !== 0 && (
-            <p className={styles.text}>Steps: {steps.map((e) => e + ". ")}</p>
+            <p className={styles.text}>Steps: {steps[0]}</p>
           )}
         </div>
       ) : (

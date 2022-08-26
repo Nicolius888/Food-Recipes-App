@@ -11,7 +11,7 @@ import {
   filterByScore,//cambiar a health score
   invertOrder,//chequear como esta funcando
   setCurrentPage,
-  // filtrarPorMenorOMayor,//chequear
+  // filtrarPorMenorOMayor(rating),//chequear
 } from "../actions";
 //Modules-Components
 import styles from "./Home.module.css";
@@ -48,7 +48,7 @@ export default function Home() {
     setLoadingOrNull("Loading...");
     dispatch(deleteRecipes());
     //resets...
-    setCurrentPage(1);
+    setCurrentPage(1);//working??
     setName("");
     setDietSelectLabel("all");
     setScoreSelectLabel("all");
@@ -182,7 +182,7 @@ export default function Home() {
               <Fragment key={recipe.id}>
                 <Link
                   to={`/home/${recipe.id}`}
-                  key={recipe.id}
+                  // key={recipe.id}
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <Card
